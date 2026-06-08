@@ -1,5 +1,7 @@
 # agent-eval
 
+a method for evaluating an AI coworker — memory, customization, trust over time, not one-shot task scores.
+
 evaluate the week, not the task.
 
 benchmarks score an agent on one task in isolation. tells you the engine works. tells you nothing about whether you'd want to work with the thing for a month. a coworker is judged on the relationship — does it remember what you told it, does it learn your conventions, does it know when to ask, does it get better the longer you use it. none of that shows up in a pass-rate.
@@ -45,4 +47,5 @@ both come from the trust-and-memory literature, cited in `docs/references.md`.
 
 ## status
 
-design-only. no code drives Hermes yet. first runnable step is filling `scenarios/suite.md` with real tasks — that turns the rubric into a baseline.
+> [!NOTE]
+> design-only. no code drives Hermes yet. first runnable step is filling `scenarios/suite.md` with real tasks — that turns the rubric into a baseline.
