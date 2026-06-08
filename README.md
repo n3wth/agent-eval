@@ -9,7 +9,7 @@ The premise: the unit of evaluation is a week, not a task. Task pass-rate is the
 - `docs/proposal.md` — the full method. Read this first.
 - `docs/scorecard.md` — the rubric: 5 dimensions by tenure axis, scored 0–4.
 - `docs/tenure-protocol.md` — cold-start / warming / warmed passes, including the wiped-memory cold-start run.
-- `docs/framework-comparison.md` — comparing whole frameworks (Hermes' stack vs. LangGraph, CrewAI, etc.). Where benchmarks live.
+- `docs/framework-comparison.md` — comparing whole frameworks (Hermes' stack vs. LangGraph, CrewAI, etc.), plus the OSS tooling per stack layer for running the eval. Where benchmarks live.
 - `docs/references.md` — the published methods each dimension is grounded in.
 - `scenarios/suite.md` — the D1/D3 task suite template (fill with real tasks).
 - `probes/memory-probes.md` — D2 multi-session tell/recall, paired durability and discrimination.

@@ -72,6 +72,42 @@ Treat any leaderboard number as point-in-time and re-verify before citing.
 - **LlamaIndex** — data and RAG-centric agents.
 - **Raw harness** — the control arm. Floor on cost and latency, ceiling on control, zero framework affordances.
 
+## OSS tooling per area, for running the eval
+
+The frameworks above are what you'd build an agent on. This section is what you'd use to evaluate one. Different job, different tools. Organized by the stack layer each lives in, with a pick per area for Hermes' case. All open-source; treat any published score as point-in-time (see the caveat in `references.md`).
+
+The portability rule that spans every layer: instrument with **OpenTelemetry / OpenInference** semantic conventions. Every serious 2026 tool ingests OTel, so tracing once and swapping backends beats coupling the eval to one vendor. This is the F5 (lock-in) lesson applied to the eval harness itself.
+
+### Orchestration (the Q1 contestants)
+What you compare. Covered above: **LangGraph** (control + native tracing), **CrewAI** (role-based, batteries-included memory), **AutoGen** (event-driven multi-agent), **smolagents** (minimal, code-as-action), **LlamaIndex** (RAG-centric), plus the **raw-harness** control arm and **Hermes' own stack**.
+**Pick for Hermes:** Hermes is the incumbent; LangGraph is the strongest adopt-alternative to bake-off against, because its control and HITL set the bar you'd be giving up bespoke for.
+
+### Observability / tracing (feeds D1 and D4)
+Where the trajectory data for outcome-and-process scoring comes from. You can't score "knows when stuck" (D4/T3) or read shortcuts (the HAL discipline) without traces.
+- **Langfuse** — MIT, self-hostable (Postgres + ClickHouse), framework-agnostic via OTel. Best when you're iterating on prompts and want full data control.
+- **Arize Phoenix** — OTel-native, OpenInference conventions, single-node self-host (ELv2 license). Best if the eval leans on trace-level analysis.
+- **Laminar** — OTel-native, built for long-running agents: transcript view, SQL over traces, session replay. Best for debugging agent runs, which is most of what D4 texture scoring is.
+**Pick for Hermes:** Langfuse to self-host on the mini (MIT, no license friction, you already run a Langfuse instance per your ClickHouse stack), with OTel instrumentation so Phoenix or Laminar stays a swap away.
+
+### Eval harness (runs the scenario suite, computes the scores)
+Where the D1 task suite and pass^k live. This is the layer that turns a run into a number.
+- **promptfoo** — declarative YAML test configs, local CLI, strong red-teaming. Lowest-friction for a fixed scenario suite re-run on every config change (your regression net). MIT; acquired by OpenAI March 2026, still open-source.
+- **DeepEval** — deepest metric library, pytest-style, CI-friendly. Best when you want many built-in metrics and Python test integration. Note it leans on LLM-as-judge, which adds cost and needs human validation.
+- **Ragas** — RAG-specific (faithfulness, context precision/recall). Only if Hermes does retrieval; otherwise skip.
+- **HAL (hal-harness)** — the reference implementation of the hold-everything-constant, cost-controlled framework comparison from the Q1 method above. This is the harness for the framework bake-off, not day-to-day scoring.
+**Pick for Hermes:** promptfoo for the re-runnable scenario suite (D1/D3 regression net), HAL when you actually run the Q1 framework bake-off. A common $0 stack is promptfoo + Phoenix; richer is DeepEval + Langfuse.
+
+### Memory layer (the D2 systems under test, and where D2 primitives come from)
+For framework comparison these are contestants (which memory system produces better D2 scores); for Hermes they're also adopt-options if you replace homegrown memory.
+- **Letta** (formerly MemGPT) — tiered self-editing memory (core/recall/archival), agent curates via tool calls. The strongest open-source self-improving option; also the clearest place to watch for over-application (the agentic write path is where one-offs become standing rules, which is exactly what P5 tests).
+- **Mem0** — open-source, very widely adopted, extraction pipeline tuned for low token cost. Good default; its own 2026 review concedes staleness and cross-device identity as open problems.
+- **Zep / Graphiti** — temporal knowledge graph with bi-temporal edges, built for "this fact was true from X to Y." Strong on the temporal and knowledge-update categories.
+- **LangMem** — LangGraph's memory store, splits semantic/episodic/procedural with explicit update/delete. Natural if you're already on LangGraph.
+**Pick for Hermes:** if you adopt rather than keep homegrown, Letta is the closest match to the coworker thesis (self-improving, tiered), but it's also the one to stress hardest on the D2 discrimination half. Run your own harness with frozen settings; the public LongMemEval/LoCoMo numbers are vendor-reported and not comparable (the Zep-vs-Mem0 dispute is the proof; see `references.md`).
+
+### One caution on the memory scores
+You'll see LongMemEval percentages quoted for these systems. Don't rank on them. They're self-reported, use different retrieval and grading settings, and the same system has been scored 30+ points apart by different parties. They tell you a system engaged with the benchmark, not that it'll be a good coworker memory for Hermes. Your own P1–P5 probes against a frozen harness are the only comparable signal.
+
 ## Where Hermes lands
 
 Hermes is its own framework: provider, model, tools, and memory are your stack on the mini. So "testing agentic frameworks" isn't academic shopping. It's "is my homegrown Hermes stack better or worse than adopting LangGraph/CrewAI/etc. as the substrate?" Hermes is one contestant in a Q1+Q2 bake-off:

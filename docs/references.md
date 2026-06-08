@@ -49,6 +49,12 @@ The original D5 ("would I delegate more than last week") was wrong, not just imp
 - **pass^k vs. pass@k (τ-bench origin).** pass@k (any-of-k) overstates reliability; pass^k (all-of-k) is the operational floor. Report both.
 - **"Beyond pass@1: A Reliability Science Framework" (2026 preprint, verify).** Capability and reliability diverge with task horizon; a model that wins on short tasks can lose on long ones. **Use:** stratify reliability by task duration.
 
+## OSS eval tooling (the per-layer picks in `framework-comparison.md`)
+
+- **Eval harnesses.** promptfoo (declarative CLI, regression net; MIT, OpenAI-acquired March 2026, still open), DeepEval (pytest-style, deep metric library, LLM-as-judge cost), Ragas (RAG-only), HAL/hal-harness (the framework bake-off harness). **Limitation:** LLM-as-judge metrics need human validation before you trust them.
+- **Observability.** Langfuse (MIT, self-hostable Postgres + ClickHouse), Arize Phoenix (OTel-native, ELv2), Laminar (built for long-running agents). **Use:** instrument with OpenTelemetry / OpenInference so the backend is swappable.
+- **Memory systems under test.** Letta/MemGPT (tiered self-editing), Mem0 (extraction pipeline, wide adoption), Zep/Graphiti (temporal graph), LangMem (LangGraph store). **Limitation:** public LongMemEval/LoCoMo scores are self-reported and not comparable; freeze your own harness.
+
 ## A standing caveat
 
 Several of the most useful 2025–2026 sources are recent preprints. The methodological claims here (calibrated reliance, paired memory metrics, pass^k, hold-everything-constant, ABA framing) are corroborated across multiple independent sources and safe to build on. Treat any specific score or leaderboard figure as point-in-time and re-verify before putting it in a final document.
