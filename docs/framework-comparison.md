@@ -1,8 +1,8 @@
 # Comparing Agentic Frameworks
 
-The coworker eval (`proposal.md`) scores one agent as a relationship. Comparing *frameworks* (LangGraph, CrewAI, AutoGen, OpenAI Agents SDK, LlamaIndex, smolagents, a raw harness, or Hermes' own stack) is a different axis. This doc handles it.
+The coworker eval (`proposal.md`) scores one agent as a relationship. Comparing frameworks (LangGraph, CrewAI, AutoGen, OpenAI Agents SDK, LlamaIndex, smolagents, a raw harness, or Hermes' own stack) is a different axis. This doc handles it.
 
-This is also where benchmarks belong. They measure the engine and the task layer, which is exactly what framework comparison needs and what the coworker dimensions (D2, D4, D5) must stay clear of. Quarantining benchmarks here keeps the rest of the eval from collapsing into a benchmark roundup.
+This is also where benchmarks belong. They measure the engine and the task layer, which is exactly what framework comparison needs and what the coworker dimensions (D2, D4, D5) have to stay clear of. Quarantining benchmarks here keeps the rest of the eval from collapsing into a benchmark roundup.
 
 ## The category error to avoid first
 
@@ -39,7 +39,7 @@ The trap is the confound. If you build the agent differently on each framework, 
 **The confounds people get wrong:**
 - **Scaffold confound.** Frameworks default to different prompts and tool formatting. Normalize these, or you're measuring prompt engineering, not the framework.
 - **Cost not reported.** Plot accuracy vs. dollars (a Pareto frontier), not accuracy alone. The top-accuracy config is usually not on the efficient frontier.
-- **Reasoning-effort confound.** More reasoning effort often *lowers* accuracy. Pin it across arms.
+- **Reasoning-effort confound.** More reasoning effort often lowers accuracy. Pin it across arms.
 - **Single runs.** Variance is large. Run N rollouts per task and report pass^k (all-of-k succeed), not just pass@1 (best-of-k). The consistency gap between them is what kills agents in production.
 - **Shortcuts and leakage.** Read the traces. Published harnesses have caught agents searching for the benchmark answer instead of solving the task, and taking unsafe actions. Scores alone hide this.
 
@@ -94,4 +94,4 @@ Use these for the D1/task layer only. Each measures the engine, not the coworker
 | BFCL v3 | Function/tool-calling accuracy, multi-turn | Calling accuracy is not task success |
 | MCP-Bench | Tool-using agents against real MCP servers | New; coverage still expanding |
 
-The τ-bench style (simulate the *user* with a model, constrain by policy, check final state) is the closest fit for a coworker agent, because it tests gathering information over turns rather than single-shot QA.
+The τ-bench style (simulate the user with a model, constrain by policy, check final state) is the closest fit for a coworker agent, because it tests gathering information over turns rather than single-shot QA.

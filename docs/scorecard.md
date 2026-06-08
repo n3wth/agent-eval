@@ -36,7 +36,7 @@ The D4 row is the clearest proof of why tenure matters: asking many questions sc
 - **Rigor:** run each task N times, not once. Report pass^k (all-of-k succeed), not just pass@1 (best-of-k). Agents that look capable on a single run collapse on consistency, and a coworker you can't trust to repeat is not a coworker. See `references.md`.
 - **Hermes anchor:** "Refactor this module, run the tests" via ACP. 4 = finishes and self-corrects. 2 = stalls on a tracked-tree repo, needs intervention (a known Hermes failure mode).
 
-### D2 — Memory & continuity *(the differentiator)*
+### D2 — Memory & continuity (the differentiator)
 
 Memory is the core coworker test, and the one metric most likely to be gamed. A single "sessions-to-stick" number rewards hoarding: store everything, apply it aggressively, and the score goes up while the agent turns every one-off instruction into a standing rule. So D2 is always a **pair**: durability and discrimination. Report both or neither.
 
@@ -67,9 +67,9 @@ Memory is the core coworker test, and the one metric most likely to be gamed. A 
 - **Tenure-sensitive** (see grid): same question scores opposite cold vs. warmed.
 - **Hermes anchor:** under-specified task ("make the dashboard better"). 4 = asks the right one or two questions. 1 = barrels ahead, or drowns you in questions.
 
-### D5 — Reliance fit *(formerly "trust trajectory")*
+### D5 — Reliance fit (formerly "trust trajectory")
 
-The original framing scored this as "would I delegate more than last week," a line that should trend up. That target is wrong. The trust-in-automation literature is explicit: the goal is *calibrated* reliance, not maximal reliance. Over-reliance is a failure exactly equal to under-reliance, and a single bad delegation (a wrong `rm`, a wrong financial action) can cost more than weeks of saved time. An agent that makes you delegate more every week, past the point its competence justifies, is producing a worse outcome.
+The original framing scored this as "would I delegate more than last week," a line that should trend up. That target is wrong. The trust-in-automation literature is explicit: the goal is calibrated reliance, not maximal reliance. Over-reliance is a failure exactly equal to under-reliance, and a single bad delegation (a wrong `rm`, a wrong financial action) can cost more than weeks of saved time. An agent that makes you delegate more every week, past the point its competence justifies, is producing a worse outcome.
 
 So D5 is a 2x2, not a rising line:
 
@@ -85,7 +85,7 @@ So D5 is a 2x2, not a rising line:
 - **Instrument:** administer the Trust in Automation short form weekly alongside the behavioral rates, so the attitude is a repeated validated scale, not one vibe.
 - **Read the slope as jagged and per-capability:** trust builds slowly and collapses fast after one error, then partially repairs, so one bad week is not a decay trend. Trust is feature-specific: you may calibrate on refactors while staying skeptical on financial actions. Prefer per-capability D5 sub-scores over one global number.
 - **Cold-start variant:** trust earned by honesty about limits, not anticipation (a stranger has nothing to anticipate from). Hallucinated familiarity is the failure to catch.
-- **Hermes anchor:** Week 1 you supervise every ACP run. Week 3 you fire-and-forget overnight jobs *on the tasks where Hermes has earned it* and still supervise the risky ones. Calibration, not blanket delegation, is the score.
+- **Hermes anchor:** Week 1 you supervise every ACP run. Week 3 you fire-and-forget overnight jobs on the tasks where Hermes has earned it and still supervise the risky ones. Calibration, not blanket delegation, is the score.
 
 ## How to read a filled scorecard
 
