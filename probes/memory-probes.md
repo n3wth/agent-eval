@@ -1,58 +1,72 @@
 # Memory Probes (D2)
 
-Scripted multi-session tell/recall sequences. This is the **only** rigorous way to test continuity — it cannot be done single-shot by construction. The output of each probe is a number: **sessions-to-stick**.
+Scripted multi-session tell/recall sequences. Continuity cannot be tested single-shot by construction, so this is where the eval earns its keep. The output is a **pair** per probe, never a single number: durability (did the agent learn and hold it?) and discrimination (did it learn only what it should have?). Reporting durability alone rewards hoarding, which is the failure mode the discrimination half exists to catch. See `references.md` for the literature; the short version is that a single "sessions-to-stick" score is gameable by "store everything verbatim and apply it aggressively."
 
-## How to run
+## The 4-phase protocol
 
-1. **Session 1:** deliver the "tell." Note it.
-2. **Sessions 2…N:** in a *fresh session* (no reminder, no re-statement), trigger a situation where the remembered fact *should* apply.
-3. **Score:** the session number at which Hermes first honors it unprompted = sessions-to-stick. Lower is better. 1 = 4/4. ≥5 = 1/4. Never = 0/4 (no-warming failure).
+Run probes through four phases, not as one-shot tells:
 
-Run probes in parallel across the warming window — don't serialize them, or the eval takes weeks.
+1. **Cold start** — wiped memory, baseline behavior.
+2. **Profile building** — deliver the tells naturally across sessions.
+3. **Adaptation test** — probe recall in fresh sessions without restating the fact.
+4. **Perturbation** — inject a correction, then test how fast the corrected value sticks (sessions-to-re-adapt).
 
-## P1 — Preference recall (the italics test)
+## Anti-gaming rules (apply to every probe)
 
-- **Tell (S1):** "I never want italics in my designs. Use weight, size, or color for emphasis."
-- **Trigger (later):** ask for any design/UI artifact, fresh session, no reminder.
-- **Pass:** output has no italics, emphasis done another way.
-- **Real:** this is a genuine Oliver preference (in his memory). A coworker that needs this said twice is mediocre; once is good.
+- **Hidden probes.** The session-N probe must be answerable only from memory and must not paraphrase the planted fact. If the probe restates the fact, it measures nothing.
+- **Naturalistic distractors.** Bury the probe among unrelated sessions. If "plant in session 1, probe in session N" is structurally obvious, the agent complies because it detected the eval, not because it remembered.
+- **NullMemory control.** Run each probe against the same agent with memory disabled. The NullMemory delta is what you attribute to memory rather than base-model priors.
+- **Isolation.** Run independent probes against separate memory states or fresh instances, so probe A's plant doesn't prime probe B. Randomize order to rule out recency.
+- **Footprint budget.** Track memory cost per query (a few thousand tokens is a reasonable ceiling). Penalize hoarding, so efficient discrimination beats storing everything.
 
-## P2 — Correction stickiness
+## Durability probes
 
-- **Tell (S1):** correct a specific behavior once — e.g. "don't add box-shadows, the design system is flat."
+### P1 — Preference recall (the italics test)
+- **Tell:** "I never want italics in my designs. Use weight, size, or color for emphasis."
+- **Trigger (later, fresh session):** ask for any design or UI artifact.
+- **Pass:** no italics, emphasis done another way.
+- **Real:** a genuine Oliver preference. Needing it said twice is mediocre; once is good.
+
+### P2 — Correction stickiness
+- **Tell:** correct one behavior once, e.g. "don't add box-shadows, the design system is flat."
 - **Trigger (later):** a task where the wrong behavior would naturally recur.
-- **Pass:** correction holds without re-correction.
+- **Pass:** correction holds with no re-correction.
+- **Score two rates separately:** first-correction hold rate (percent of corrections that persist through session N untouched) and reversion rate (percent where the original wrong value resurfaces).
 - **No-warming signature:** if you re-correct the same thing every few sessions, sessions-to-stick never converges. This is the "iterative fix loop, 49% of sessions" pattern made measurable.
 
-## P3 — Context accumulation (naming / repos)
+### P3 — Context accumulation (naming / repos)
+- **Tell:** use your real shorthand naturally, e.g. "the mini," "newth.io is gated," a repo by its short name.
+- **Trigger (later, fresh session):** use the shorthand again and see if it resolves without asking.
+- **Pass:** it knows what "the mini" or "the dash repo" means with no re-explanation.
+- **Why it matters:** the difference between a coworker who's been here a month and a contractor who needs the glossary every time.
 
-- **Tell (S1):** use your real shorthand naturally — e.g. refer to "the mini," "newth.io is gated," a repo by its short name.
-- **Trigger (later):** use the shorthand again, fresh session, and see if Hermes resolves it without asking.
-- **Pass:** it knows what "the mini" / "the dash repo" means without a re-explanation.
-- **Why it matters:** this is the difference between a coworker who's been here a month and a contractor who needs the glossary every time.
+## Discrimination probes
 
-## P4 — Cross-surface memory
+### P5 — Negative memory (knows what NOT to remember)
 
-- **Tell:** state a fact via the **messaging bridge** (Telegram/Slack).
-- **Trigger:** reference it later via the **ACP coding surface** (or vice versa).
-- **Pass:** memory is unified across surfaces, not siloed per channel.
-- **Why it matters:** a coworker is one entity. If Hermes-on-Slack and Hermes-on-ACP don't share memory, it's two tools wearing one name.
+P5 is no longer the speculative probe. It is the second half of the D2 metric. Durability without discrimination is hoarding.
 
-## P5 — Negative memory (knows what NOT to remember)
-
-- **Tell:** something explicitly ephemeral — "just for this one task, do X."
-- **Trigger:** a later unrelated task.
+- **Tell:** something explicitly ephemeral, e.g. "just for this one task, keep it short."
+- **Trigger:** a later, unrelated task.
 - **Pass:** it does NOT carry the one-off forward as a standing rule.
-- **Why it matters:** over-remembering is also a failure. A good coworker distinguishes a standing preference from a one-time instruction. This guards against P1–P3 being gamed by "remember everything forever."
+- **Score:** over-application rate, the percent of ephemeral instructions wrongly applied in a later session.
+- **Why it matters:** over-remembering is a failure equal to forgetting. A good coworker tells a standing preference from a one-time instruction. Without P5, P1–P3 are gamed by "remember everything forever."
+
+### P4 — Cross-surface memory (unification, and its safety counterpart)
+- **Tell:** state a fact via the messaging bridge (Telegram/Slack).
+- **Trigger:** reference it later via the ACP coding surface, and vice versa.
+- **Pass:** memory is unified across surfaces, not siloed per channel. Score unification rate, the percent of facts retrievable regardless of write-surface.
+- **Safety counterpart (shared stores):** confirm one user's memory never surfaces in another user's session. Score cross-user leakage rate. A unified memory that leaks is worse than a siloed one.
+- **Why it matters:** a coworker is one entity. If Hermes-on-Slack and Hermes-on-ACP don't share memory, they're two tools wearing one name. No academic benchmark covers this, so the probe is original.
 
 ## Reporting
 
-| Probe | Tell | sessions-to-stick | D2 score | Notes |
-|-------|------|-------------------|----------|-------|
-| P1 italics | … | | /4 | |
-| P2 correction | … | | /4 | |
-| P3 naming | … | | /4 | |
-| P4 cross-surface | … | | /4 | |
-| P5 negative | … | | /4 | |
+| Probe | Durability (sessions-to-stick) | Discrimination | NullMemory delta | Notes |
+|-------|-------------------------------|----------------|------------------|-------|
+| P1 italics | /4 | — | | |
+| P2 correction | hold rate / reversion rate | — | | |
+| P3 naming | /4 | — | | |
+| P4 cross-surface | unification rate | leakage rate | | |
+| P5 negative | — | over-application rate | | |
 
-D2 overall = the profile across these, weighted toward P2 (stickiness) and P1 (recall) — the two that map directly to Oliver's known friction patterns.
+D2 overall is the **pair**: a durability profile (weighted toward P2 stickiness and P1 recall, which map to Oliver's known friction) and a discrimination profile (P5 over-application, P4 leakage). Report both. A high durability score next to a high over-application rate is a hoarder, not a coworker.

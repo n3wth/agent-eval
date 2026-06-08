@@ -1,23 +1,28 @@
 # agent-eval
 
-A method for evaluating an AI coworker — not a tool you grade once, but a relationship you measure over time. Hermes (Oliver's mini agent) is the worked example throughout.
+A method for evaluating an AI coworker. Not a tool you grade once, but a relationship you measure over time. Hermes (Oliver's mini agent) is the worked example throughout.
 
-The premise: the unit of evaluation is a **week**, not a task. Task pass-rate is the floor. The differentiator is whether working with the agent gets *better the longer you do it* — and whether it's useful to someone it has never met.
+The premise: the unit of evaluation is a week, not a task. Task pass-rate is the floor. The differentiator is whether working with the agent gets better the longer you use it, and whether it helps someone it has never met.
 
 ## Layout
 
 - `docs/proposal.md` — the full method. Read this first.
-- `docs/scorecard.md` — the rubric: 5 dimensions × tenure axis, 0–4 anchored.
-- `docs/tenure-protocol.md` — how to run the cold-start / warming / warmed passes, including the wiped-memory cold-start run.
+- `docs/scorecard.md` — the rubric: 5 dimensions by tenure axis, scored 0–4.
+- `docs/tenure-protocol.md` — cold-start / warming / warmed passes, including the wiped-memory cold-start run.
+- `docs/framework-comparison.md` — comparing whole frameworks (Hermes' stack vs. LangGraph, CrewAI, etc.). Where benchmarks live.
+- `docs/references.md` — the published methods each dimension is grounded in.
 - `scenarios/suite.md` — the D1/D3 task suite template (fill with real tasks).
-- `probes/memory-probes.md` — D2 multi-session tell/recall sequences.
-- `probes/texture-probes.md` — D4 ask/push-back/admit-stuck probes.
+- `probes/memory-probes.md` — D2 multi-session tell/recall, paired durability and discrimination.
+- `probes/texture-probes.md` — D4 ask / push-back / admit-stuck, plus the daily journal.
 - `scorecards/template.md` — a blank scored run with a date column.
+
+## The two corrections that keep it honest
+
+Two framings look like progress and are half-wrong. The eval pairs each against its failure mode:
+
+- **Memory:** "remember more" rewards hoarding. D2 pairs durability against over-application rate.
+- **Reliance:** "delegate more" rewards over-reliance. D5 scores calibrated reliance (relied-when-right, overrode-when-wrong), not delegation volume.
 
 ## Status
 
-Design-only. No code drives Hermes yet — the rubric and protocols are reviewed before anything wires to the mini.
-
-## The one line
-
-Evaluate the *week, not the task*. Score five dimensions — competence, memory, fit, texture, trust — on a 0–4 scale, across three tenure states (cold / warming / warmed), and read **trust-trajectory's slope** as the headline. The soft dimensions and the cold-start pass are the differentiators; any eval that skips them measures the engine, not the coworker.
+Design-only. No code drives Hermes yet. The rubric and protocols are reviewed before anything wires to the mini.
