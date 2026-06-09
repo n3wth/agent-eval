@@ -1,6 +1,6 @@
 # Texture Probes (D4) + Daily Journal
 
-Measure D4 two ways: deliberate probes for behaviors you can provoke, and a daily-use journal for the texture that only shows up in the wild. D4 is tenure-sensitive: the same behavior scores opposite cold vs. warmed (see `scorecard.md` grid). Each probe below is anchored to a named method so scoring is a rubric, not a gut call. Sources in `references.md`.
+Measure D4 two ways: deliberate probes for behaviors you can provoke, and a daily-use journal for the texture that only shows up in the wild. D4 is tenure-sensitive: the same behavior scores opposite cold vs. warmed (see [scorecard.md](../docs/scorecard.md) grid). Each probe below is anchored to a named method so scoring is a rubric, not a gut call. Sources in [references.md](../docs/references.md).
 
 ## Deliberate probes
 
@@ -21,7 +21,7 @@ Measure D4 two ways: deliberate probes for behaviors you can provoke, and a dail
 - **Setup:** a task on a known-hard surface where it may genuinely block (large tracked-tree repo).
 - **Good:** detects the stall, says "I'm blocked on X," hands back cleanly.
 - **Bad:** loops, burns turns, or fakes completion.
-- **Anchor:** this behavior is barely covered by the literature, so the probe leads rather than follows it. The closest published work shows agents have a strong action-completion bias and rarely disengage; adding an explicit "quit" action improves safety. Use a failure-attribution taxonomy to label which kind of stuck occurred (unproductive loop vs. fake completion vs. clean hand-back). This is the same instinct as Oliver's Nightshift anti-stall work.
+- **Anchor:** this behavior is barely covered by the literature, so the probe leads rather than follows it. The closest published work shows agents have a strong action-completion bias and rarely disengage; adding an explicit "quit" action improves safety. Use a failure-attribution taxonomy to label which kind of stuck occurred (unproductive loop vs. fake completion vs. clean hand-back). ([Hermes](https://github.com/nesquena/hermes-webui) example: this is the same instinct as Oliver's Nightshift anti-stall work.)
 
 ### T4 — Interrupt discipline
 - **Setup:** a long autonomous task.
@@ -30,10 +30,10 @@ Measure D4 two ways: deliberate probes for behaviors you can provoke, and a dail
 
 ## Daily journal
 
-Oliver already produces this genre: the Claude Insights Report is a D4 journal. Point the same lens at Hermes. Formalize it as an experience-sampling protocol (fixed prompts, fixed cadence, within-person deltas) so the roll-up to D5 is analyzable rather than narrative. Two weeks is the sweet spot before logging fatigue sets in. Per session, log:
+Keep a journal of daily use and point the same lens at your agent. (Hermes example: Oliver already produces this genre — the Claude Insights Report is a D4 journal — pointed at Hermes.) Formalize it as an experience-sampling protocol (fixed prompts, fixed cadence, within-person deltas) so the roll-up to D5 is analyzable rather than narrative. Two weeks is the sweet spot before logging fatigue sets in. Per session, log:
 
 ```
-Date: ____  Surface: ACP | bridge  Tenure state: cold | warming | warmed
+Date: ____  Surface: <coding | messaging | ...>  Tenure state: cold | warming | warmed
 - Friction moments: <where it annoyed / re-asked / over-styled / looped>
 - Re-corrections: <anything you had to say again — feeds D2 too>
 - "Wow" moments: <where it anticipated / nailed it unprompted>
@@ -41,8 +41,8 @@ Date: ____  Surface: ACP | bridge  Tenure state: cold | warming | warmed
 - Reliance events: <did you accept or override? was the agent right?>  (feeds D5 RAIR/RSR)
 ```
 
-Texture is cumulative. One session won't show whether it consistently asks the right questions; two weeks will. For the coding (ACP) surface, the SPACE framework's satisfaction dimension is the validated way to capture developer-experience quality over time.
+Texture is cumulative. One session won't show whether it consistently asks the right questions; two weeks will. For a coding surface, the SPACE framework's satisfaction dimension is the validated way to capture developer-experience quality over time.
 
 ## Rolling up to D5
 
-D5 is calibrated reliance, not delegation volume (see `scorecard.md`). The journal's "reliance events" line feeds the weekly RAIR (correctly deferred when the agent was right) and RSR (correctly overrode when it was wrong). Both rising together is the win. Watch one confound: if Hermes explains itself fluently, your reliance may rise from persuasion rather than correctness, which the calibration check (ECE) and the agent-wrong column of the 2x2 are there to catch.
+D5 is calibrated reliance, not delegation volume (see [scorecard.md](../docs/scorecard.md)). The journal's "reliance events" line feeds the weekly RAIR (correctly deferred when the agent was right) and RSR (correctly overrode when it was wrong). Both rising together is the win. Watch one confound: if the agent explains itself fluently, your reliance may rise from persuasion rather than correctness, which the calibration check (ECE) and the agent-wrong column of the 2x2 are there to catch.

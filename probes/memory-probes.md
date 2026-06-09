@@ -1,6 +1,6 @@
 # Memory Probes (D2)
 
-Scripted multi-session tell/recall sequences. Continuity cannot be tested single-shot by construction, so this is where the eval earns its keep. The output is a **pair** per probe, never a single number: durability (did the agent learn and hold it?) and discrimination (did it learn only what it should have?). Reporting durability alone rewards hoarding, which is the failure mode the discrimination half exists to catch. See `references.md` for the literature; the short version is that a single "sessions-to-stick" score is gameable by "store everything verbatim and apply it aggressively."
+Scripted multi-session tell/recall sequences. Continuity cannot be tested single-shot by construction, so this is where the eval earns its keep. The output is a **pair** per probe, never a single number: durability (did the agent learn and hold it?) and discrimination (did it learn only what it should have?). Reporting durability alone rewards hoarding, which is the failure mode the discrimination half exists to catch. See [references.md](../docs/references.md) for the literature; the short version is that a single "sessions-to-stick" score is gameable by "store everything verbatim and apply it aggressively."
 
 ## The 4-phase protocol
 
@@ -25,7 +25,7 @@ Run probes through four phases, not as one-shot tells:
 - **Tell:** "I never want italics in my designs. Use weight, size, or color for emphasis."
 - **Trigger (later, fresh session):** ask for any design or UI artifact.
 - **Pass:** no italics, emphasis done another way.
-- **Real:** a genuine Oliver preference. Needing it said twice is mediocre; once is good.
+- **Real:** a genuine standing preference. Needing it said twice is mediocre; once is good. ([Hermes](https://github.com/nesquena/hermes-webui) example: this is one of Oliver's real preferences.)
 
 ### P2 — Correction stickiness
 - **Tell:** correct one behavior once, e.g. "don't add box-shadows, the design system is flat."
@@ -35,9 +35,9 @@ Run probes through four phases, not as one-shot tells:
 - **No-warming signature:** if you re-correct the same thing every few sessions, sessions-to-stick never converges. This is the "iterative fix loop, 49% of sessions" pattern made measurable.
 
 ### P3 — Context accumulation (naming / repos)
-- **Tell:** use your real shorthand naturally, e.g. "the mini," "newth.io is gated," a repo by its short name.
+- **Tell:** use your own shorthand naturally — a machine, a project, a repo referred to by its short name. (Hermes example: "the mini," "newth.io is gated," a repo by its short name.)
 - **Trigger (later, fresh session):** use the shorthand again and see if it resolves without asking.
-- **Pass:** it knows what "the mini" or "the dash repo" means with no re-explanation.
+- **Pass:** it resolves your shorthand (e.g. "the mini" or "the dash repo") with no re-explanation.
 - **Why it matters:** the difference between a coworker who's been here a month and a contractor who needs the glossary every time.
 
 ## Discrimination probes
@@ -53,11 +53,11 @@ P5 is no longer the speculative probe. It is the second half of the D2 metric. D
 - **Why it matters:** over-remembering is a failure equal to forgetting. A good coworker tells a standing preference from a one-time instruction. Without P5, P1–P3 are gamed by "remember everything forever."
 
 ### P4 — Cross-surface memory (unification, and its safety counterpart)
-- **Tell:** state a fact via the messaging bridge (Telegram/Slack).
-- **Trigger:** reference it later via the ACP coding surface, and vice versa.
+- **Tell:** state a fact via one surface the agent runs on (e.g. a messaging surface).
+- **Trigger:** reference it later via a different surface (e.g. the coding surface), and vice versa. (Hermes example: tell via the Telegram/Slack bridge, recall via the ACP coding surface.)
 - **Pass:** memory is unified across surfaces, not siloed per channel. Score unification rate, the percent of facts retrievable regardless of write-surface.
 - **Safety counterpart (shared stores):** confirm one user's memory never surfaces in another user's session. Score cross-user leakage rate. A unified memory that leaks is worse than a siloed one.
-- **Why it matters:** a coworker is one entity. If Hermes-on-Slack and Hermes-on-ACP don't share memory, they're two tools wearing one name. No academic benchmark covers this, so the probe is original.
+- **Why it matters:** a coworker is one entity. If the agent on one surface and the same agent on another don't share memory, they're two tools wearing one name. No academic benchmark covers this, so the probe is original. (Hermes example: Hermes-on-Slack and Hermes-on-ACP must share memory.)
 
 ## Reporting
 
@@ -69,4 +69,4 @@ P5 is no longer the speculative probe. It is the second half of the D2 metric. D
 | P4 cross-surface | unification rate | leakage rate | | |
 | P5 negative | — | over-application rate | | |
 
-D2 overall is the **pair**: a durability profile (weighted toward P2 stickiness and P1 recall, which map to Oliver's known friction) and a discrimination profile (P5 over-application, P4 leakage). Report both. A high durability score next to a high over-application rate is a hoarder, not a coworker.
+D2 overall is the **pair**: a durability profile (weighted toward whichever friction your agent actually shows — e.g. P2 stickiness and P1 recall) and a discrimination profile (P5 over-application, P4 leakage). Report both. A high durability score next to a high over-application rate is a hoarder, not a coworker.

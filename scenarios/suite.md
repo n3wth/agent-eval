@@ -12,7 +12,7 @@ Generic benchmarks (SWE-bench, HumanEval, and their kin) measure the engine. You
 
 1. Replace the placeholder tasks below with real ones. Keep the mix (see categories).
 2. For each task, write a concrete **pass/fail criterion** before running: not "did it do well" but "the output matched the brief and it didn't need rescue." For browser- or UI-surface tasks, the **SETUP → STEPS → EXPECT → FAIL** structure makes pass/fail unambiguous — state the start state, the actions, the exact pass condition, and the specific bad outcomes ("blank screen or auto-creates a session," not "something's wrong"). The [hermes-webui `TESTING.md`](https://github.com/nesquena/hermes-webui/blob/master/TESTING.md) is a worked example: it writes every case in that form and pins regression tests to the bugs that motivated them, so a human or a browser agent can run the same doc.
-3. Score each on the 0–4 anchors (`docs/scorecard.md`). Record handholding count.
+3. Score each on the 0–4 anchors ([docs/scorecard.md](../docs/scorecard.md)). Record handholding count.
 4. Re-run the same suite after any config/model/tool change. The diff is your regression signal.
 
 ## Category mix (keep roughly balanced)
@@ -27,7 +27,7 @@ Generic benchmarks (SWE-bench, HumanEval, and their kin) measure the engine. You
 
 A background scenario is a recurring world the agent works in, not a single task. Each carries standing context (the surface, the conventions, what a stranger couldn't know) so that expanding into concrete tasks is mechanical: pick a background, pick a category, write the prompt and the pass criterion. The same background spawns a routine task and an ambiguous one and a stall-prone one, which keeps the suite grounded instead of a grab-bag.
 
-The eight below are modalities, not domains. Each holds whether your coworker writes code, drafts copy, runs research, or manages ops — only the examples swap. For each, the **cold/warmed split** is the load-bearing part: what a warmed agent already knows versus what a wiped one would have to ask. That line is what the cold-start pass (`docs/tenure-protocol.md`) is testing.
+The eight below are modalities, not domains. Each holds whether your coworker writes code, drafts copy, runs research, or manages ops — only the examples swap. For each, the **cold/warmed split** is the load-bearing part: what a warmed agent already knows versus what a wiped one would have to ask. That line is what the cold-start pass ([docs/tenure-protocol.md](../docs/tenure-protocol.md)) is testing.
 
 ### B1 — The house-style surface (your conventions live here)
 - Spawns: customization, routine, ambiguous

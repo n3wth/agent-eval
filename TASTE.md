@@ -2,7 +2,7 @@
 
 Not a style guide. A log of decisions I already made about how these docs read, and why. Taste isn't a rulebook you follow — it's caring enough to keep editing past "good enough," saying "no, not that" until what's left means something. This file can't give you that. It can only stop an AI editor (or a tired me) from dragging the docs back toward the average.
 
-So read it as: here's what I chose, and what I was choosing against. The proposal (`docs/proposal.md`) is the real reference — it shows the voice better than this file describes it.
+So read it as: here's what I chose, and what I was choosing against. The proposal ([docs/proposal.md](docs/proposal.md)) is the real reference — it shows the voice better than this file describes it.
 
 ## What I was choosing against
 
@@ -14,7 +14,7 @@ AI converges on the expected answer: the most popular template, the safest phras
 - **One idea per sentence, lengths varied.** A long sentence builds the argument; a short one lands it. I wrote against the flat, uniform rhythm AI defaults to.
 - **Concrete nouns, always.** I named the failure mode (cold-start cliff, hoarder, no-warming), the metric (RAIR, pass^k), the real example (the italics test) instead of reaching for a generic word. Specificity is where the person shows up.
 - **Active voice.** The agent asks, the score flips, the probe catches.
-- **Cite or soften.** Soft claims rest on a named method (`references.md`) or they get hedged down. "From the trust literature," never "studies show." I refused to wave at unnamed authority.
+- **Cite or soften.** Soft claims rest on a named method ([docs/references.md](docs/references.md)) or they get hedged down. "From the trust literature," never "studies show." I refused to wave at unnamed authority.
 - **Name the trap.** The move I kept reaching for: surface the seductive-wrong framing ("remember more," "delegate more"), then correct it. It's the most "me" thing in the repo. Systematizing it here already dulls it slightly — so use it where it earns its place, don't paint-by-numbers it.
 
 ## What I cut on sight

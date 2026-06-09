@@ -2,7 +2,7 @@
 
 One filled scorecard is one run. Keep them dated; the trend across runs is the actual product. Minimum two tenure columns (cold-start, warmed). The gap between them is the cold-start cliff.
 
-**Agent:** Hermes (mini)  ·  **Config/version:** `<what changed since last run>`  ·  **Date:** `YYYY-MM-DD`
+**Agent:** [Hermes](https://github.com/nesquena/hermes-webui) (mini)  ·  **Config/version:** `<what changed since last run>`  ·  **Date:** `YYYY-MM-DD`
 
 ## Grid
 
@@ -18,7 +18,7 @@ One filled scorecard is one run. Keep them dated; the trend across runs is the a
 ## Headline
 
 - **Reliance fit (D5):** RAIR and RSR vs. last run. Both up = calibration improving. This is the number you quote, not delegation volume.
-- **Cold-start cliff size:** warmed avg − cold avg = ___ (large gap = adoption risk for anyone but Oliver).
+- **Cold-start cliff size:** warmed avg − cold avg = ___ (large gap = adoption risk for anyone but the agent's primary user).
 - **Memory pair:** durability ___ vs. over-application ___ (high durability + high over-application = hoarder).
 - **Dominant friction this run:** <the one thing dragging the score>.
 
