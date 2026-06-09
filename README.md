@@ -15,49 +15,7 @@ This repo is a method for scoring that. Hermes is the worked example, but it app
 
 ## Scoring
 
-Five dimensions, scored 0 to 4, measured by four instruments, across three tenure states. The dimensions are what you score; the tenure axis is when; the instruments are how.
-
-```mermaid
-%%{init: {"fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Helvetica, Arial, sans-serif"}}%%
-flowchart LR
-    subgraph INS["HOW · 4 instruments"]
-        direction TB
-        I1["Scenario suite"]
-        I2["Memory probes"]
-        I3["Daily journal"]
-        I4["Reliance check"]
-    end
-
-    subgraph DIM["WHAT · 5 dimensions"]
-        direction TB
-        D1["D1 Competence"]
-        D2["D2 Memory"]
-        D3["D3 Customization"]
-        D4["D4 Texture"]
-        D5["D5 Reliance fit"]
-    end
-
-    subgraph TEN["WHEN · 3 tenure states"]
-        direction TB
-        C["Cold start"] --> W["Warming"] --> M["Warmed"]
-    end
-
-    I1 --> D1 & D3
-    I2 --> D2
-    I3 --> D4 & D5
-    I4 --> D5
-    DIM == "scored in each →" ==> TEN
-
-    classDef ins fill:#1f6feb,stroke:#1158c7,color:#fff,stroke-width:1px;
-    classDef dim fill:#238636,stroke:#1a6b2b,color:#fff,stroke-width:1px;
-    classDef ten fill:#9e6a03,stroke:#7d5303,color:#fff,stroke-width:1px;
-    class I1,I2,I3,I4 ins;
-    class D1,D2,D3,D4,D5 dim;
-    class C,W,M ten;
-    style INS fill:transparent,stroke:#8b949e,stroke-width:1px,color:#8b949e;
-    style DIM fill:transparent,stroke:#8b949e,stroke-width:1px,color:#8b949e;
-    style TEN fill:transparent,stroke:#8b949e,stroke-width:1px,color:#8b949e;
-```
+Five dimensions, scored 0 to 4, measured by four instruments, across three tenure states. The dimensions are what you score, the tenure axis is when, the instruments are how.
 
 | | Dimension | The question |
 |---|-----------|--------------|
