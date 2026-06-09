@@ -42,11 +42,11 @@ flowchart LR
         C["Cold start"] --> W["Warming"] --> M["Warmed"]
     end
 
-    I1 --> D1 & D3
+    I1 --> D1
     I2 --> D2
-    I3 --> D4 & D5
+    I3 --> D4
     I4 --> D5
-    DIM -. "scored in each" .-> TEN
+    D3 == "scored in each →" ==> W
 
     classDef ins fill:#1f6feb,stroke:#1158c7,color:#fff,stroke-width:1px;
     classDef dim fill:#238636,stroke:#1a6b2b,color:#fff,stroke-width:1px;
