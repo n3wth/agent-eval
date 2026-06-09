@@ -1,6 +1,6 @@
 # n3wth/agent-eval
 
-A method for evaluating an AI coworker on the things one-shot benchmarks miss: memory, customization, and trust built over time.
+A method for evaluating an AI coworker on things one-shot benchmarks miss: memory, customization and trust built over time.
 
 > [!NOTE]
 > Design-only. The first runnable step is filling [scenarios/suite.md](scenarios/suite.md) with real tasks, which turns the rubric into a baseline.
