@@ -1,3 +1,10 @@
 node_modules/
 .DS_Store
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Filled scorecards / journals with private run data (keep the template)
 scorecards/runs/

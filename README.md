@@ -1,6 +1,6 @@
 # n3wth/agent-eval
 
-A method for evaluating an AI coworker: memory, customization, and trust over time, not one-shot task scores.
+A method for evaluating an AI coworker on the things one-shot benchmarks miss: memory, customization, and trust built over time.
 
 > [!NOTE]
 > Design-only. The first runnable step is filling [scenarios/suite.md](scenarios/suite.md) with real tasks, which turns the rubric into a baseline.
@@ -11,9 +11,9 @@ Benchmarks score an agent on one task in isolation. That tells you the engine wo
 
 This repo is a method for scoring that. Hermes is the worked example, but it applies to any agent you'd treat as a coworker rather than a tool.
 
-## The shape of it
+## What gets scored
 
-Five dimensions, scored across three tenure states, measured by four instruments. The dimensions are what you score; the tenure axis is when; the instruments are how.
+Five dimensions, scored 0 to 4, measured by four instruments, across three tenure states. The dimensions are what you score; the tenure axis is when; the instruments are how.
 
 ```mermaid
 flowchart LR
@@ -44,12 +44,6 @@ flowchart LR
     DIM -.scored in each.-> TEN
 ```
 
-The same dimension scores differently by tenure: asking many questions is good onboarding at cold start and a failure once warmed. That flip is why the tenure axis exists, and why a flat scorecard misses what a coworker eval is for.
-
-## What gets scored
-
-Five dimensions, scored 0 to 4, across three tenure states: a brand-new user, a few sessions in, weeks in. The same behavior can score differently by tenure. Asking lots of questions is good onboarding on day one and a failure once the agent should know you.
-
 | | Dimension | The question |
 |---|-----------|--------------|
 | D1 | Competence | Can it do the work, repeatably? |
@@ -59,6 +53,8 @@ Five dimensions, scored 0 to 4, across three tenure states: a brand-new user, a 
 | D5 | Reliance fit | Do I delegate to it appropriately? |
 
 D1 is the floor. D2 through D4 are where coworker diverges from tool. D5 is the number you'd quote, and it only reads as a trend.
+
+The same dimension scores differently by tenure: asking many questions is good onboarding at cold start, a failure once the agent should know you. That flip is why the tenure axis exists, and why a flat scorecard misses what a coworker eval is for.
 
 ## The two corrections that keep it honest
 

@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this method or scorecard, please cite it."
+title: "agent-eval: a method for evaluating an AI coworker"
+abstract: >-
+  A method and scorecard for evaluating an AI agent as a long-term
+  collaborator rather than a one-shot tool: five dimensions (competence,
+  memory, customization, collaboration texture, reliance fit) scored across
+  three tenure states (cold start, warming, warmed), with paired metrics that
+  penalize memory hoarding and over-reliance.
+type: software
+authors:
+  - alias: n3wth
+    family-names: Newth
+    given-names: Oliver
+repository-code: "https://github.com/n3wth/agent-eval"
+url: "https://github.com/n3wth/agent-eval"
+license: MIT
+keywords:
+  - AI agents
+  - evaluation
+  - LLM
+  - memory
+  - trust calibration
+  - human-AI collaboration
