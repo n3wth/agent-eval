@@ -1,4 +1,4 @@
-# agent-eval
+# n3wth/agent-eval
 
 A method for evaluating an AI coworker: memory, customization, and trust over time, not one-shot task scores.
 
