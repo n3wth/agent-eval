@@ -110,6 +110,20 @@ def test_reliance_feeds_d5_and_drift_flag(tmp_path):
     assert record["flags"]["drift_to_over_reliance"] is False
 
 
+def test_delta_chain_survives_custom_runs_dir(tmp_path):
+    from agent_eval.scorecard import write_scorecard
+
+    base = tmp_path / "elsewhere"
+    seed_suite(base, "warmed", 0.5)
+    write_scorecard(assemble(base), out_dir=tmp_path / "cards", runs_dir=base)
+    seed_suite(base, "warmed", 1.0)
+    second = assemble(base)
+    # The first scorecard's JSON landed in the custom runs dir, so the
+    # second run finds its baseline there.
+    assert second["delta"] is not None
+    assert second["delta"]["moves"]["d1.warmed"] == {"from": 2.0, "to": 4.0}
+
+
 def test_markdown_renders_with_gaps(tmp_path):
     base = tmp_path / "runs"
     seed_suite(base, "warmed", 1.0)

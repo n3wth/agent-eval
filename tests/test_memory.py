@@ -60,6 +60,21 @@ def test_amnesiac_fails_durability():
     assert report["over_application_rate"] == 0.0
 
 
+def test_pending_human_checks_counted_for_the_cli_note():
+    probe = MemoryProbe(
+        id="PH",
+        kind="discrimination",
+        tell=["Just for this one task, keep it short."],
+        trigger="Explain pooling.",
+        checks=[{"type": "human", "question": "Did the one-off stick?"}],
+        distractor_sessions=0,
+        probe_repeats=1,
+    )
+    agent = MockAdapter({"behavior": "good"})
+    report = run_memory_probes(agent, [ITALICS_PROBE, probe], DISTRACTORS)
+    assert report["pending_count"] == 1
+
+
 def test_durability_alone_is_not_reportable_as_d2():
     agent = MockAdapter({"behavior": "good"})
     report = run_memory_probes(agent, [ITALICS_PROBE], DISTRACTORS)

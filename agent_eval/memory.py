@@ -257,6 +257,7 @@ def _aggregate(results: list[dict], ctx: CheckContext) -> dict:
         "over_application_rate": over_application_rate,
         "reversions": sum(1 for r in durability if r.get("reverted")),
         "d2_reportable": d2_reportable,
+        "pending_count": sum(1 for r in results if r.get("status") == "pending"),
         "pending_human": ctx.pending_human,
     }
     if not d2_reportable:

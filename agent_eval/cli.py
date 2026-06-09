@@ -163,7 +163,7 @@ def cmd_reliance(args) -> int:
 
 def cmd_scorecard(args) -> int:
     record = scorecard_mod.assemble(args.runs_dir, agent=args.agent)
-    md, _ = scorecard_mod.write_scorecard(record)
+    md, _ = scorecard_mod.write_scorecard(record, runs_dir=args.runs_dir)
     print(scorecard_mod.render_markdown(record))
     print(f"saved: {md}")
     return 0

@@ -218,11 +218,17 @@ def render_markdown(record: dict) -> str:
     return "\n".join(lines)
 
 
-def write_scorecard(record: dict, out_dir: str | Path = "scorecards/runs") -> tuple[Path, Path]:
+def write_scorecard(
+    record: dict,
+    out_dir: str | Path = "scorecards/runs",
+    runs_dir: str | Path = "runs",
+) -> tuple[Path, Path]:
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     stamp = time.strftime("%Y%m%d-%H%M%S")
     md = out / f"run-{stamp}.md"
     md.write_text(render_markdown(record))
-    json_path = storage.save_run(record, "scorecard")
+    # The JSON record must land in the same runs dir the next assemble()
+    # reads, or the delta chain breaks — and the delta is the product.
+    json_path = storage.save_run(record, "scorecard", runs_dir)
     return md, json_path
