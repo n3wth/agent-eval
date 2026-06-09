@@ -2,6 +2,9 @@
 
 A method for evaluating an AI coworker: memory, customization, and trust over time, not one-shot task scores.
 
+> [!NOTE]
+> Design-only. The first runnable step is filling [scenarios/suite.md](scenarios/suite.md) with real tasks, which turns the rubric into a baseline.
+
 Evaluate the week, not the task.
 
 Benchmarks score an agent on one task in isolation. That tells you the engine works. It tells you nothing about whether you'd want to work with it for a month. A coworker is judged on the relationship: does it remember what you told it, does it learn your conventions, does it know when to ask, does it get better the longer you use it. None of that shows up in a pass-rate.
@@ -102,8 +105,3 @@ Four instruments, escalating in cost and signal. The deliverable is a dated scor
 | [probes/memory-probes.md](probes/memory-probes.md) | D2 multi-session tell/recall, durability paired with discrimination. |
 | [probes/texture-probes.md](probes/texture-probes.md) | D4 ask/push-back/admit-stuck, plus the daily journal. |
 | [scorecards/template.md](scorecards/template.md) | A blank scored run with a date column. |
-
-## Status
-
-> [!NOTE]
-> Design-only. No code drives Hermes yet. The first runnable step is filling [scenarios/suite.md](scenarios/suite.md) with real tasks, which turns the rubric into a baseline.
