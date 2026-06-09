@@ -5,7 +5,7 @@ This repo is a method, not a product. The most useful contributions sharpen the 
 ## What helps most
 
 - **Fill the scenario suite with real tasks.** [scenarios/suite.md](scenarios/suite.md) ships as a template. A filled suite — concrete prompts and pass criteria from real work — is what turns the rubric into a baseline. This is the first runnable step.
-- **Add or refine a probe.** New memory ([probes/memory-probes.md](probes/memory-probes.md)) or texture ([probes/texture-probes.md](probes/texture-probes.md)) probes that test a coworker behavior the current set misses. A probe must be answerable only from the thing it measures, and must not restate the planted fact.
+- **Add or refine a probe.** New memory ([probes/memory.md](probes/memory.md)) or texture ([probes/texture.md](probes/texture.md)) probes that test a coworker behavior the current set misses. A probe must be answerable only from the thing it measures, and must not restate the planted fact.
 - **Ground a claim.** If a dimension rests on a method, it should cite one ([docs/references.md](docs/references.md)). New citations are welcome with a verified link (arXiv abs, DOI, or ACL Anthology) and a one-line note on what it contributes and its limitation. Do not add a link you have not opened.
 - **Report a run.** Score a real agent against the rubric and share the dated scorecard. Cross-agent data is the point.
 

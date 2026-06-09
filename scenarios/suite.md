@@ -27,7 +27,7 @@ Generic benchmarks (SWE-bench, HumanEval, and their kin) measure the engine. You
 
 A background scenario is a recurring world the agent works in, not a single task. Each carries standing context (the surface, the conventions, what a stranger couldn't know) so that expanding into concrete tasks is mechanical: pick a background, pick a category, write the prompt and the pass criterion. The same background spawns a routine task and an ambiguous one and a stall-prone one, which keeps the suite grounded instead of a grab-bag.
 
-The eight below are modalities, not domains. Each holds whether your coworker writes code, drafts copy, runs research, or manages ops — only the examples swap. For each, the **cold/warmed split** is the load-bearing part: what a warmed agent already knows versus what a wiped one would have to ask. That line is what the cold-start pass ([docs/tenure-protocol.md](../docs/tenure-protocol.md)) is testing.
+The eight below are modalities, not domains. Each holds whether your coworker writes code, drafts copy, runs research, or manages ops — only the examples swap. For each, the **cold/warmed split** is the load-bearing part: what a warmed agent already knows versus what a wiped one would have to ask. That line is what the cold-start pass ([docs/tenure.md](../docs/tenure.md)) is testing.
 
 ### B1 — The house-style surface (your conventions live here)
 - Spawns: customization, routine, ambiguous

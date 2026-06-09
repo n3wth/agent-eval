@@ -75,15 +75,15 @@ An AI coworker is two products depending on how much it already knows you. A str
 | Warming | A few sessions in | Visibly getting better. Corrections stick. The "it remembered" moment lands. |
 | Warmed | Weeks in, rich memory | Invisible competence. Anticipates. Rarely re-asks. |
 
-The gap between the cold and warmed columns is itself a finding: a large gap is the **cold-start cliff** — magic for the builder, unusable for anyone new. A personal agent built by and for one person is at maximum risk of it, and the builder is least able to see it because they are never cold. The wiped-memory cold-start run ([docs/tenure-protocol.md](docs/tenure-protocol.md)) is how you manufacture the cold start you can't otherwise observe.
+The gap between the cold and warmed columns is itself a finding: a large gap is the **cold-start cliff** — magic for the builder, unusable for anyone new. A personal agent built by and for one person is at maximum risk of it, and the builder is least able to see it because they are never cold. The wiped-memory cold-start run ([docs/tenure.md](docs/tenure.md)) is how you manufacture the cold start you can't otherwise observe.
 
 ## How to run it
 
 Four instruments, escalating in cost and signal. The deliverable is a dated scorecard; its value is the delta between runs, not any single run.
 
 1. **Scenario suite** (D1, D3) — ~10–15 tasks from real work, re-run after every config change. The regression net. Run each task N times and report pass^k (all-of-k succeed), not pass@1. → [scenarios/suite.md](scenarios/suite.md)
-2. **Memory probes** (D2) — scripted tell-then-recall across sessions, paired with an over-application check and a memory-disabled control. The only rigorous way to test continuity; impossible single-shot. → [probes/memory-probes.md](probes/memory-probes.md)
-3. **Daily journal** (D4, D5) — 1–2 weeks of real use logged on a fixed cadence. → [probes/texture-probes.md](probes/texture-probes.md)
+2. **Memory probes** (D2) — scripted tell-then-recall across sessions, paired with an over-application check and a memory-disabled control. The only rigorous way to test continuity; impossible single-shot. → [probes/memory.md](probes/memory.md)
+3. **Daily journal** (D4, D5) — 1–2 weeks of real use logged on a fixed cadence. → [probes/texture.md](probes/texture.md)
 4. **Reliance check** (D5) — RAIR and RSR computed weekly from accept/override events, plus a validated trust scale. Read calibration, not volume.
 
 **Cadence:** baseline cold and warmed → use daily for 1–2 weeks → re-score weekly. → [scorecards/template.md](scorecards/template.md)
@@ -94,10 +94,10 @@ Four instruments, escalating in cost and signal. The deliverable is a dated scor
 |------|--------------|
 | [docs/proposal.md](docs/proposal.md) | The full method. |
 | [docs/scorecard.md](docs/scorecard.md) | The rubric: five dimensions by tenure, scored 0 to 4. |
-| [docs/tenure-protocol.md](docs/tenure-protocol.md) | The three passes, including the wiped-memory cold-start run. |
-| [docs/framework-comparison.md](docs/framework-comparison.md) | Comparing whole frameworks, and the OSS tooling per stack layer for running the eval. Benchmarks live here. |
+| [docs/tenure.md](docs/tenure.md) | The three passes, including the wiped-memory cold-start run. |
+| [docs/frameworks.md](docs/frameworks.md) | Comparing whole frameworks, and the OSS tooling per stack layer for running the eval. Benchmarks live here. |
 | [docs/references.md](docs/references.md) | The published method behind each dimension. |
 | [scenarios/suite.md](scenarios/suite.md) | The D1/D3 task suite (a template; fill with real work). |
-| [probes/memory-probes.md](probes/memory-probes.md) | D2 multi-session tell/recall, durability paired with discrimination. |
-| [probes/texture-probes.md](probes/texture-probes.md) | D4 ask/push-back/admit-stuck, plus the daily journal. |
+| [probes/memory.md](probes/memory.md) | D2 multi-session tell/recall, durability paired with discrimination. |
+| [probes/texture.md](probes/texture.md) | D4 ask/push-back/admit-stuck, plus the daily journal. |
 | [scorecards/template.md](scorecards/template.md) | A blank scored run with a date column. |

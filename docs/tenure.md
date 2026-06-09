@@ -27,7 +27,7 @@ The highest-information run in the proposal, and the one daily use can never pro
 
 The pass that defines D2. The only one needing multiple real sessions.
 
-**Run:** execute the [probes/memory-probes.md](../probes/memory-probes.md) sequences over consecutive sessions, through the 4-phase protocol (cold-start, build, adapt, perturb).
+**Run:** execute the [probes/memory.md](../probes/memory.md) sequences over consecutive sessions, through the 4-phase protocol (cold-start, build, adapt, perturb).
 - Plant in session 1, probe recall in session N without reminding. Record sessions-to-stick per probe, paired with the discrimination metrics (over-application, leakage). Durability alone is gameable.
 - After the perturbation phase, record sessions-to-re-adapt: how fast a correction sticks.
 - Log the "it remembered" moments too; they're the warming payoff that makes a tool feel like a coworker.
@@ -38,7 +38,7 @@ The pass that defines D2. The only one needing multiple real sessions.
 
 The scorecard run from your real, rich-memory state.
 
-**Run:** the daily-use journal ([probes/texture-probes.md](../probes/texture-probes.md) observed in the wild) for 1–2 weeks, plus the scenario suite re-run after any config change.
+**Run:** the daily-use journal ([probes/texture.md](../probes/texture.md) observed in the wild) for 1–2 weeks, plus the scenario suite re-run after any config change.
 - Score D1, D3, D4, D5 warmed. Here, re-asking a known question is a failure, not onboarding.
 - **Isolate warmed-competence inflation:** a warmed agent looks more competent because it already knows your repos and conventions. When scoring D1 warmed, note whether the win came from memory or raw capability. Otherwise D1 warmed and D1 cold disagree and you won't know why.
 

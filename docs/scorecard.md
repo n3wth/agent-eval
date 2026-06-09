@@ -2,7 +2,7 @@
 
 The rubric is a grid: 5 dimensions by 3 tenure states. Each cell scored 0–4, anchored. Every score has a written behavioral definition, so the number means the same thing across runs, across time, and across agents.
 
-Grounding for the methods below is in [references.md](references.md). The short version: the soft dimensions (D2, D4, D5) carry the eval and are the easiest to fake, so each is tied to a published method rather than a gut call. Benchmarks live in [framework-comparison.md](framework-comparison.md), not here. They measure the engine; this scores the coworker.
+Grounding for the methods below is in [references.md](references.md). The short version: the soft dimensions (D2, D4, D5) carry the eval and are the easiest to fake, so each is tied to a published method rather than a gut call. Benchmarks live in [frameworks.md](frameworks.md), not here. They measure the engine; this scores the coworker.
 
 ## Universal 0–4 anchors
 
@@ -40,7 +40,7 @@ The D4 row is the clearest proof of why tenure matters: asking many questions sc
 
 Memory is the core coworker test, and the one metric most likely to be gamed. A single "sessions-to-stick" number rewards hoarding: store everything, apply it aggressively, and the score goes up while the agent turns every one-off instruction into a standing rule. So D2 is always a **pair**: durability and discrimination. Report both or neither.
 
-- **Probe:** scripted multi-session tell/recall ([probes/memory-probes.md](../probes/memory-probes.md)), run as a 4-phase protocol: cold-start, profile-building, adaptation test, perturbation (inject a correction).
+- **Probe:** scripted multi-session tell/recall ([probes/memory.md](../probes/memory.md)), run as a 4-phase protocol: cold-start, profile-building, adaptation test, perturbation (inject a correction).
 - **Durability — score on:**
   - **Preference recall** — stated once, honored later unprompted.
   - **Correction stickiness** — corrected once, stays corrected vs. reverts. Track first-correction hold rate and reversion rate separately.
@@ -59,7 +59,7 @@ Memory is the core coworker test, and the one metric most likely to be gamed. A 
 - **Hermes anchor:** change the system instruction on the mini, resend the same task, confirm output changed as intended. One-line tune beats a rebuild.
 
 ### D4 — Collaboration texture
-- **Probe:** deliberately ambiguous tasks, tasks where it should push back, tasks it can't finish ([probes/texture-probes.md](../probes/texture-probes.md)).
+- **Probe:** deliberately ambiguous tasks, tasks where it should push back, tasks it can't finish ([probes/texture.md](../probes/texture.md)).
 - **Score on:**
   - **Asks vs. guesses** — clarifies the load-bearing ambiguity, doesn't interrupt on the obvious. Over-asking is a failure too. Anchored to abstention and clarification benchmarks; expressed uncertainty scored by calibration error (ECE). See [references.md](references.md).
   - **Surfaces disagreement** — flags a bad idea vs. silently complies. Anchored to the sycophancy eval: script a correct answer, push back, measure whether it folds.
