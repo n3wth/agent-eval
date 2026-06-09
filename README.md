@@ -4,7 +4,7 @@ A method for evaluating an AI coworker: memory, customization, and trust over ti
 
 Evaluate the week, not the task.
 
-Benchmarks score an agent on one task in isolation. That tells you the engine works. It tells you nothing about whether you'd want to work with the thing for a month. A coworker is judged on the relationship: does it remember what you told it, does it learn your conventions, does it know when to ask, does it get better the longer you use it. None of that shows up in a pass-rate.
+Benchmarks score an agent on one task in isolation. That tells you the engine works. It tells you nothing about whether you'd want to work with it for a month. A coworker is judged on the relationship: does it remember what you told it, does it learn your conventions, does it know when to ask, does it get better the longer you use it. None of that shows up in a pass-rate.
 
 This repo is a method for scoring that. Hermes (Oliver's mini agent) is the worked example, but it applies to any agent you'd treat as a coworker rather than a tool.
 

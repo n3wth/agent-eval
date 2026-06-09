@@ -8,7 +8,7 @@ A coworker is not a tool you grade once. You evaluate a tool on output quality; 
 
 Most evals collapse two halves into one. A scorecard: the dimensions and criteria (`scorecard.md`). A method: longitudinal, not single-shot (§4). The scorecard is worthless run once. Its value is the delta between runs.
 
-The trap to name up front: it's tempting to score only what's cheap to measure (did the task pass?). But task pass-rate is the floor, not the differentiator. Coworker-ness lives in memory, fit, and collaboration texture, which are softer to measure and the entire point. An eval that skips the soft dimensions has failed before it starts.
+The trap to name up front: it's tempting to score only what's cheap to measure (did the task pass?). Task pass-rate is the floor, not the differentiator. Coworker-ness lives in memory, fit, and collaboration texture, which are softer to measure and the entire point. An eval that skips the soft dimensions has failed before it starts.
 
 Where the soft dimensions get measured, they're tied to published methods, not vibes (`references.md`). Two of them are corrections to the obvious framing: "remember more" and "delegate more" both look like progress and both are half-wrong. Memory must be paired against over-application; delegation must be calibrated, not maximized. Those two fixes are §3 and the D2/D5 entries in the scorecard.
 

@@ -11,7 +11,7 @@ Generic benchmarks (SWE-bench, HumanEval, and their kin) measure the engine. You
 ## How to use
 
 1. Replace the placeholder tasks below with real ones. Keep the mix (see categories).
-2. For each task, write a concrete **pass/fail criterion** before running: not "did it do well" but "the output matched the brief and it didn't need rescue."
+2. For each task, write a concrete **pass/fail criterion** before running: not "did it do well" but "the output matched the brief and it didn't need rescue." For browser- or UI-surface tasks, the **SETUP → STEPS → EXPECT → FAIL** structure makes pass/fail unambiguous — state the start state, the actions, the exact pass condition, and the specific bad outcomes ("blank screen or auto-creates a session," not "something's wrong"). The [hermes-webui `TESTING.md`](https://github.com/nesquena/hermes-webui/blob/master/TESTING.md) is a worked example: it writes every case in that form and pins regression tests to the bugs that motivated them, so a human or a browser agent can run the same doc.
 3. Score each on the 0–4 anchors (`docs/scorecard.md`). Record handholding count.
 4. Re-run the same suite after any config/model/tool change. The diff is your regression signal.
 
