@@ -5,6 +5,8 @@ A method for evaluating an AI coworker on the things one-shot benchmarks miss: m
 > [!NOTE]
 > Design-only. The first runnable step is filling [scenarios/suite.md](scenarios/suite.md) with real tasks, which turns the rubric into a baseline.
 
+## Overview
+
 Evaluate the week, not the task.
 
 Benchmarks score an agent on one task in isolation. That tells you the engine works. It tells you nothing about whether you'd want to work with it for a month. A coworker is judged on the relationship: does it remember what you told it, does it learn your conventions, does it know when to ask, does it get better the longer you use it. None of that shows up in a pass-rate.
