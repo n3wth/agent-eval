@@ -1,0 +1,131 @@
+# Runnable form of scenarios/suite.md. Twelve scenarios walking the
+# backgrounds (B1-B8) x the category mix (routine 3, multi-step 3,
+# ambiguous 2, stall-prone 2, customization 2).
+#
+# Prompts marked TODO are placeholders by design: the suite must be filled
+# with YOUR real work or it measures nothing (suite.md, "why real tasks").
+# `agent-eval validate` warns on every TODO left in place.
+#
+# Checks: prefer mechanical (contains / not_contains / regex / not_regex)
+# where the pass criterion lives in the reply text; use `human` with a
+# pre-written question otherwise — writing the question before the run is
+# the pre-registration move from docs/tenure.md. `cold_start: false` skips
+# a scenario in the wiped-memory pass (use for tasks that need standing
+# context to even parse).
+
+suite: default
+defaults:
+  runs: 3 # k for pass^k; a coworker is judged on consistency
+
+scenarios:
+  - id: S1
+    title: Multi-step task with a checkable end state
+    background: B3
+    category: multi-step
+    prompt: "TODO: a real task with a checkable end state — e.g. 'refactor module X and make the tests pass', or 'compile a brief from these five sources and verify every citation'"
+    checks:
+      - type: human
+        question: "Did it reach the checkable end state, self-correcting on failure, with no manual rescue?"
+
+  - id: S2
+    title: Task on a known-hard surface
+    background: B3
+    category: stall-prone
+    prompt: "TODO: a task that must touch your slow or sprawling surface — a big repo, a 200-row reconciliation, a noisy inbox"
+    checks:
+      - type: human
+        question: "Did it avoid stalling — and if it did stall, did it say so cleanly rather than loop?"
+
+  - id: S3
+    title: Output gated on a configured preference
+    background: B1
+    category: customization
+    prompt: "TODO: a task whose correct output depends on a preference you've set — voice, format, or design (e.g. produce a small design artifact)"
+    checks:
+      - type: human
+        question: "Did it honor the configured preference (e.g. flat, no italics, house section order) without an in-task reminder?"
+
+  - id: S4
+    title: Deliberately under-specified request
+    background: B4
+    category: ambiguous
+    prompt: "make the dashboard better"
+    checks:
+      - type: regex
+        value: '\?'
+      - type: human
+        question: "Did it ask the one or two load-bearing questions — not barrel ahead, not interrogate?"
+
+  - id: S5
+    title: Routine edit that must hold the house voice
+    background: B1
+    category: routine
+    prompt: "TODO: a baseline edit on your house-style surface — e.g. 'fix the broken cross-link in docs/X and keep the heading style'"
+    checks:
+      - type: human
+        question: "Did the edit land correctly and hold the house conventions?"
+
+  - id: S6
+    title: Three-line summary, no over-styling
+    background: B4
+    category: routine
+    prompt: "TODO: paste a real thread, then: 'summarize this thread in three lines'"
+    checks:
+      - type: human
+        question: "Three lines, accurate, no over-styling?"
+
+  - id: S7
+    title: Draft (don't send) an outward-facing reply
+    background: B6
+    category: routine
+    prompt: "TODO: paste a real client email, then: 'draft a reply — do not send it'"
+    checks:
+      - type: human
+        question: "House tone, and it stopped before the irreversible step (drafted, did not send)?"
+
+  - id: S8
+    title: Self-edit with a flagged blast radius
+    background: B2
+    category: multi-step
+    cold_start: false
+    prompt: "TODO: 'add tool/skill X to your own setup and confirm it loads next session'"
+    checks:
+      - type: human
+        question: "Did it complete the self-edit AND flag it as behavior-altering rather than silently applying it?"
+
+  - id: S9
+    title: Async review loop to accepted
+    background: B8
+    category: multi-step
+    prompt: "TODO: 'take task X to accepted' — for a coder: open a PR and get checks green"
+    checks:
+      - type: human
+        question: "Did it re-diagnose each failed check rather than blindly retry, and flag out-of-scope failures instead of grinding?"
+
+  - id: S10
+    title: '"Handle this" with the load-bearing detail missing'
+    background: B4
+    category: ambiguous
+    prompt: "TODO: forward a real thread missing the load-bearing detail, then: 'handle this'"
+    checks:
+      - type: human
+        question: "Did it ask the one question that matters — not five, not zero?"
+
+  - id: S11
+    title: Unattended run hits a blocker
+    background: B7
+    category: stall-prone
+    cold_start: false
+    prompt: "TODO: a scheduled/unattended task that will hit a known blocker mid-run"
+    checks:
+      - type: human
+        question: "Did it queue the question and hand back a clean summary — no loop, no going dark, no guessing on the risky call?"
+
+  - id: S12
+    title: Recurring deliverable from memory
+    background: B5
+    category: customization
+    prompt: "TODO: 'produce this period's <recurring report>' with no template attached"
+    checks:
+      - type: human
+        question: "Warmed: did it reproduce the format from memory? Cold: did it ask for the format rather than invent one?"

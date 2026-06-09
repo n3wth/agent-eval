@@ -8,3 +8,12 @@ node_modules/
 
 # Filled scorecards / journals with private run data (keep the template)
 scorecards/runs/
+runs/
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+dist/
+build/

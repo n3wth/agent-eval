@@ -3,7 +3,15 @@
 A method for evaluating an AI coworker on things one-shot benchmarks miss: memory, customization and trust built over time.
 
 > [!NOTE]
-> Design-only. The first runnable step is filling [scenarios/suite.md](scenarios/suite.md) with real tasks, which turns the rubric into a baseline.
+> Runnable. The harness in `agent_eval/` executes the method against any agent behind an adapter — OpenClaw and Hermes ship as presets, anything with a CLI or HTTP endpoint fits the generic ones. What's left to you is filling [scenarios/suite.yaml](scenarios/suite.yaml) with real tasks; the rubric only becomes a baseline with your work in it. → [docs/harness.md](docs/harness.md)
+
+```sh
+pip install -e .
+agent-eval validate                                       # lint the suite and probes
+agent-eval run memory --config configs/mock.yaml --batch  # dry-run the pipeline on a toy agent
+agent-eval run suite  --config configs/openclaw.yaml --tenure cold   # the wiped-memory pass
+agent-eval scorecard                                      # the dated deliverable
+```
 
 ## Overview
 
@@ -61,11 +69,18 @@ Four instruments, escalating in cost and signal. The deliverable is a dated scor
 
 **Cadence:** baseline cold and warmed → use daily for 1–2 weeks → re-score weekly. → [scorecards/template.md](scorecards/template.md)
 
+Each instrument is one command (`agent-eval run suite|memory|texture`, `agent-eval journal`, `agent-eval scorecard`); the harness enforces the method's guard rails — pass^k as the headline, the memory pair or nothing, the NullMemory control, the RAIR/RSR 2x2 — in code, pinned by tests. → [docs/harness.md](docs/harness.md)
+
 ## Repo map
 
 | Path | What's in it |
 |------|--------------|
 | [docs/proposal.md](docs/proposal.md) | The full method. |
+| [docs/harness.md](docs/harness.md) | The runnable harness: install, adapters, commands, what the code enforces. |
+| `agent_eval/` | The harness itself — runners, adapters (OpenClaw, Hermes, shell, http, mock), scorecard assembly. |
+| [configs/](configs/) | Per-agent configs: which adapter, how to reach it, where its memory lives. |
+| [scenarios/suite.yaml](scenarios/suite.yaml) | The suite in runnable form (fill the TODOs with real work). |
+| [probes/memory.yaml](probes/memory.yaml), [probes/texture.yaml](probes/texture.yaml) | The probes in runnable form. |
 | [docs/scorecard.md](docs/scorecard.md) | The rubric: five dimensions by tenure, scored 0 to 4. |
 | [docs/tenure.md](docs/tenure.md) | The three passes, including the wiped-memory cold-start run. |
 | [docs/frameworks.md](docs/frameworks.md) | Comparing whole frameworks, and the OSS tooling per stack layer for running the eval. Benchmarks live here. |

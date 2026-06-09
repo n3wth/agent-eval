@@ -1,0 +1,27 @@
+# OpenClaw, driven through its CLI. The preset (agent_eval/adapters/openclaw.py)
+# supplies the defaults shown commented out; uncomment to override. CLI flags
+# and the workspace location have moved across releases — check
+# `openclaw --help` and your install before a real run.
+#
+#   agent-eval run suite  --config configs/openclaw.yaml --tenure cold
+#   agent-eval run memory --config configs/openclaw.yaml
+#
+# memory_paths is what makes the wiped-memory cold-start pass and the
+# NullMemory control work: the harness moves these aside (never deletes)
+# and restores them after. Point it at wherever YOUR install keeps
+# continuity — memory files, vector store, session history.
+name: openclaw
+runs_dir: runs
+
+agent:
+  adapter: openclaw
+  # command: ["openclaw", "agent", "--session-id", "{session_id}", "--message", "{message}"]
+  # response: text            # or "json:path.to.field" if you pass a --json flag
+  # timeout: 600
+  # memory_paths:
+  #   - "~/.openclaw/workspace/MEMORY.md"
+  #   - "~/.openclaw/workspace/memory"
+  # memory_backup_dir: "~/.agent-eval/memory-backups"
+# judge:                      # optional LLM judge for `llm` checks (biases
+#   adapter: shell            # flagged per docs/tenure.md — prefer human scoring
+#   command: ["claude", "-p", "{message}"]

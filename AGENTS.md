@@ -55,10 +55,13 @@ A filled scorecard is read for these patterns, not just totals:
 - **Benchmarks live in `docs/frameworks.md`, nowhere else.** They measure the engine; this scores the coworker. Quarantining them keeps the eval from collapsing into a benchmark roundup.
 - **Probes must be honest.** A probe must be answerable only from the thing it measures and must not restate the planted fact. Every memory probe runs against a NullMemory control.
 - **Run for consistency, not best-of.** Report pass^k (all-of-k succeed), not pass@1. A coworker you can't trust to repeat is not a coworker.
+- **The invariants above are enforced in `agent_eval/` and pinned by `tests/`.** The memory pair, the NullMemory control, the restatement lint, the 2x2, pass^k as headline — a code change that weakens one must fail a test; if it doesn't, add the test. Run `python -m pytest` before pushing.
 
 ## Where things live
 
 - `docs/proposal.md` — the full method (read this first)
+- `docs/harness.md` — the runnable harness; `agent_eval/` is the code, `tests/` pin the invariants
+- `configs/` — per-agent adapter configs (OpenClaw, Hermes, mock, generic shell/http)
 - `docs/scorecard.md` — the rubric, dimensions × tenure, 0–4 anchors
 - `docs/tenure.md` — the three passes incl. the wiped-memory cold start
 - `docs/frameworks.md` — framework comparison + OSS tooling + benchmarks
