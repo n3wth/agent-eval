@@ -58,7 +58,7 @@ D1 is the floor. D2 through D4 are where coworker diverges from tool. D5 is the 
 
 The same dimension scores differently by tenure: asking many questions is good onboarding at cold start, a failure once the agent should know you. That flip is why the tenure axis exists, and why a flat scorecard misses what a coworker eval is for.
 
-## The two corrections that keep it honest
+## Corrections
 
 Two framings look like progress and reward the wrong thing. The eval pairs each against its failure mode.
 
@@ -67,7 +67,7 @@ Two framings look like progress and reward the wrong thing. The eval pairs each 
 
 Both come from the trust-and-memory literature, cited in [docs/references.md](docs/references.md).
 
-## The tenure axis
+## Tenure
 
 An AI coworker is two products depending on how much it already knows you. A stranger and a colleague are different evals, and the split has a name in the trust literature: dispositional trust (what a stranger brings) vs. learned trust (built through use).
 
@@ -79,7 +79,7 @@ An AI coworker is two products depending on how much it already knows you. A str
 
 The gap between the cold and warmed columns is itself a finding: a large gap is the **cold-start cliff** — magic for the builder, unusable for anyone new. A personal agent built by and for one person is at maximum risk of it, and the builder is least able to see it because they are never cold. The wiped-memory cold-start run ([docs/tenure.md](docs/tenure.md)) is how you manufacture the cold start you can't otherwise observe.
 
-## How to run it
+## Running it
 
 Four instruments, escalating in cost and signal. The deliverable is a dated scorecard; its value is the delta between runs, not any single run.
 
