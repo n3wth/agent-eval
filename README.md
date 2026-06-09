@@ -13,7 +13,7 @@ Benchmarks score an agent on one task in isolation. That tells you the engine wo
 
 This repo is a method for scoring that. Hermes is the worked example, but it applies to any agent you'd treat as a coworker rather than a tool.
 
-## What gets scored
+## Scoring
 
 Five dimensions, scored 0 to 4, measured by four instruments, across three tenure states. The dimensions are what you score; the tenure axis is when; the instruments are how.
 
