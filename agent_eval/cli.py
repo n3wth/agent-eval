@@ -2,12 +2,15 @@
 
     agent-eval validate                              # lint suite + probes
     agent-eval run suite   --config configs/mock.yaml [--tenure cold|warmed] [-k 3]
-    agent-eval run memory  --config configs/mock.yaml [--second-config ...]
+    agent-eval run memory  --config configs/mock.yaml [--cycles 5] [--isolate] [--shuffle-seed 7]
     agent-eval run texture --config configs/mock.yaml [--tenure cold|warmed]
+    agent-eval score                                 # resolve a batch run's pending checks
     agent-eval journal add                           # interactive daily entry
     agent-eval journal reliance --relied --right     # one accept/override event
+    agent-eval journal trust --score 5               # weekly trust-scale rating
     agent-eval reliance                              # weekly RAIR / RSR
     agent-eval scorecard                             # assemble the dated scorecard
+    agent-eval compare a.json b.json                 # two scorecards side by side
 
 Cadence (docs/proposal.md): baseline cold and warmed, use daily for 1-2
 weeks logging journal + reliance events, re-score weekly. The scorecard
@@ -23,6 +26,7 @@ import sys
 from . import journal as journal_mod
 from . import memory as memory_mod
 from . import reliance as reliance_mod
+from . import score as score_mod
 from . import scorecard as scorecard_mod
 from . import storage
 from . import suite as suite_mod
@@ -69,10 +73,14 @@ def cmd_run(args) -> int:
 
     if args.instrument == "memory":
         probes, distractors = memory_mod.load_probes(args.probes or DEFAULT_MEMORY)
+        if args.cycles:
+            for p in probes:
+                p.cycles = args.cycles
         second = EvalConfig.load(args.second_config).build_agent() if args.second_config else None
         record = memory_mod.run_memory_probes(
             agent, probes, distractors, ctx=ctx,
             second_adapter=second, control=not args.no_control,
+            isolate=args.isolate, shuffle_seed=args.shuffle_seed,
         )
         record["agent"] = cfg.name
         path = storage.save_run(record, "memory", cfg.runs_dir)
@@ -121,10 +129,25 @@ def cmd_validate(args) -> int:
     return 1 if failures else 0
 
 
+def cmd_score(args) -> int:
+    return score_mod.main_interactive(args.runs_dir, args.file)
+
+
+def cmd_compare(args) -> int:
+    with open(args.a) as fa, open(args.b) as fb:
+        a, b = json.load(fa), json.load(fb)
+    print(scorecard_mod.render_comparison(a, b))
+    return 0
+
+
 def cmd_journal(args) -> int:
     if args.journal_cmd == "add":
         entry = journal_mod.add_journal_entry_interactive(args.runs_dir)
         print(f"logged journal entry for {entry['date']}")
+        return 0
+    if args.journal_cmd == "trust":
+        journal_mod.add_trust_score(args.score, note=args.note, base=args.runs_dir)
+        print(f"logged trust score {args.score}")
         return 0
     if args.journal_cmd == "reliance":
         entry = journal_mod.add_reliance_event(
@@ -183,9 +206,17 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("-k", type=int, default=None, help="runs per scenario for pass^k")
     run.add_argument("--second-config", default=None, help="second surface for cross-surface probes (P4)")
     run.add_argument("--no-control", action="store_true", help="skip the NullMemory control (recorded as skipped)")
-    run.add_argument("--batch", action="store_true", help="non-interactive; human checks become pending")
+    run.add_argument("--cycles", type=int, default=None, help="trigger sessions per memory probe (the warming curve; rubric needs ≥2)")
+    run.add_argument("--isolate", action="store_true", help="checkpoint/rollback memory between probes so plants don't prime each other")
+    run.add_argument("--shuffle-seed", type=int, default=None, help="randomize probe order (seed recorded in the run)")
+    run.add_argument("--batch", action="store_true", help="non-interactive; human checks become pending (resolve later with `agent-eval score`)")
     run.add_argument("--judge", action="store_true", help="use the configured LLM judge for `llm` checks")
     run.set_defaults(func=cmd_run)
+
+    score = sub.add_parser("score", help="resolve pending human checks on a saved run, then re-aggregate")
+    score.add_argument("--runs-dir", default="runs")
+    score.add_argument("--file", default=None, help="run record to score (default: latest with pending checks)")
+    score.set_defaults(func=cmd_score)
 
     val = sub.add_parser("validate", help="lint the suite and probe files")
     val.add_argument("--suite", default=DEFAULT_SUITE)
@@ -206,6 +237,9 @@ def build_parser() -> argparse.ArgumentParser:
     g2.add_argument("--wrong", dest="right", action="store_false", help="the agent was wrong")
     rel.add_argument("--capability", default="general", help="per-capability tag (refactor, finance, ...)")
     rel.add_argument("--note", default="")
+    trust = jsub.add_parser("trust", help="log a weekly trust-scale rating (1-7)")
+    trust.add_argument("--score", type=float, required=True)
+    trust.add_argument("--note", default="")
     jr.set_defaults(func=cmd_journal)
 
     rl = sub.add_parser("reliance", help="weekly RAIR / RSR from logged events")
@@ -217,6 +251,11 @@ def build_parser() -> argparse.ArgumentParser:
     sc.add_argument("--runs-dir", default="runs")
     sc.add_argument("--agent", default="agent")
     sc.set_defaults(func=cmd_scorecard)
+
+    cmp_p = sub.add_parser("compare", help="two scorecard JSONs side by side (cross-agent or cross-run)")
+    cmp_p.add_argument("a")
+    cmp_p.add_argument("b")
+    cmp_p.set_defaults(func=cmd_compare)
 
     return p
 

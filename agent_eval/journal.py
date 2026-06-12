@@ -62,6 +62,17 @@ def add_journal_entry_interactive(base: str | Path = "runs") -> dict:
     return entry
 
 
+def add_trust_score(score: float, note: str = "", base: str | Path = "runs") -> dict:
+    """One trust-scale self-rating (1-7), the weekly repeated measure from
+    docs/scorecard.md D5. The harness records the number; administer
+    whichever validated instrument you've adopted and log its mean here."""
+    if not 1 <= score <= 7:
+        raise ValueError("trust score is a 1-7 scale")
+    entry = {"type": "trust", "score": float(score), "note": note}
+    append_entry(entry, base)
+    return entry
+
+
 def add_reliance_event(
     relied: bool,
     agent_right: bool,

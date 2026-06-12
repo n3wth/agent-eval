@@ -60,6 +60,11 @@ class MemoryControl(ABC):
 
     Per docs/tenure.md: move aside, never delete. ``wipe`` must be reversible
     by ``restore``.
+
+    ``checkpoint``/``rollback`` are the copy-based pair behind probe
+    isolation: a checkpoint survives any number of rollbacks, so every probe
+    can start from the same baseline state. Optional — adapters that can't
+    copy their store simply don't support ``--isolate``.
     """
 
     @abstractmethod
@@ -68,6 +73,18 @@ class MemoryControl(ABC):
 
     @abstractmethod
     def restore(self, token: str) -> None: ...
+
+    def checkpoint(self) -> str:
+        """Snapshot memory without disturbing it. Reusable across rollbacks."""
+        raise MemoryUnsupported(f"{type(self).__name__} cannot checkpoint")
+
+    def rollback(self, token: str) -> None:
+        """Return memory to a checkpoint, keeping the checkpoint valid."""
+        raise MemoryUnsupported(f"{type(self).__name__} cannot rollback")
+
+    @property
+    def supports_isolation(self) -> bool:
+        return type(self).checkpoint is not MemoryControl.checkpoint
 
     def set_enabled(self, enabled: bool) -> None:
         """Toggle memory for the NullMemory control. Default: wipe/restore."""

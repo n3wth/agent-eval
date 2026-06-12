@@ -12,13 +12,14 @@ keeps only the probes tagged for that state (untagged probes run in both).
 
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
 
 from .adapters.base import Adapter
-from .checks import CheckContext, overall_status, run_checks
+from .checks import CheckContext, run_checks
 
 
 @dataclass
@@ -64,6 +65,7 @@ def run_texture_probes(
     for probe in probes:
         if probe.tenure is not None and probe.tenure != tenure:
             continue
+        start = time.monotonic()
         session = adapter.start_session()
         try:
             reply_text = ""
@@ -77,11 +79,33 @@ def run_texture_probes(
                 "id": probe.id,
                 "title": probe.title,
                 "dimension": probe.dimension,
-                "status": overall_status(checks),
                 "checks": [c.to_dict() for c in checks],
-                "reply_excerpt": reply_text[:500],
+                "reply": reply_text,
+                "latency_s": round(time.monotonic() - start, 3),
             }
         )
+
+    record = {
+        "kind": "texture",
+        "tenure": tenure,
+        "probes": results,
+        "pending_human": ctx.pending_human,
+    }
+    return aggregate_texture(record)
+
+
+def aggregate_texture(record: dict) -> dict:
+    """Derive per-probe status and per-dimension rates from the raw record."""
+    for probe in record["probes"]:
+        statuses = {c["status"] for c in probe.get("checks", [])}
+        if "fail" in statuses:
+            probe["status"] = "fail"
+        elif "pending" in statuses:
+            probe["status"] = "pending"
+        else:
+            probe["status"] = "pass"
+
+    results = record["probes"]
 
     def rate(dim: str):
         scored = [r for r in results if r["dimension"] == dim and r["status"] != "pending"]
@@ -89,12 +113,11 @@ def run_texture_probes(
             return None
         return sum(1 for r in scored if r["status"] == "pass") / len(scored)
 
-    return {
-        "kind": "texture",
-        "tenure": tenure,
-        "probes": results,
-        "d4_rate": rate("d4"),
-        "d5_rate": rate("d5"),
-        "pending_count": sum(1 for r in results if r["status"] == "pending"),
-        "pending_human": ctx.pending_human,
-    }
+    record.update(
+        {
+            "d4_rate": rate("d4"),
+            "d5_rate": rate("d5"),
+            "pending_count": sum(1 for r in results if r["status"] == "pending"),
+        }
+    )
+    return record

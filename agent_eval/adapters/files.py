@@ -57,3 +57,44 @@ class FileMemoryControl(MemoryControl):
                 shutil.move(str(orig_path), str(aside))
             orig_path.parent.mkdir(parents=True, exist_ok=True)
             shutil.move(moved, str(orig_path))
+
+    def checkpoint(self) -> str:
+        token = f"ckpt-{time.strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:6]}"
+        dest = self.backup_root / token
+        dest.mkdir(parents=True, exist_ok=True)
+        manifest = []
+        for i, path in enumerate(self.paths):
+            if not path.exists():
+                continue
+            target = dest / f"{i}-{path.name}"
+            if path.is_dir():
+                shutil.copytree(path, target)
+            else:
+                shutil.copy2(path, target)
+            manifest.append((str(path), str(target)))
+        (dest / "MANIFEST").write_text(
+            "\n".join(f"{orig}\t{copied}" for orig, copied in manifest)
+        )
+        return token
+
+    def rollback(self, token: str) -> None:
+        dest = self.backup_root / token
+        manifest_file = dest / "MANIFEST"
+        if not manifest_file.exists():
+            raise FileNotFoundError(f"no checkpoint for token {token}")
+        aside_dir = dest / f"pre-rollback-{uuid.uuid4().hex[:6]}"
+        for line in manifest_file.read_text().splitlines():
+            if not line.strip():
+                continue
+            orig, copied = line.split("\t")
+            orig_path = Path(orig)
+            copied_path = Path(copied)
+            if orig_path.exists():
+                # Never delete: the probe-era state moves aside.
+                aside_dir.mkdir(parents=True, exist_ok=True)
+                shutil.move(str(orig_path), str(aside_dir / orig_path.name))
+            orig_path.parent.mkdir(parents=True, exist_ok=True)
+            if copied_path.is_dir():
+                shutil.copytree(copied_path, orig_path)
+            else:
+                shutil.copy2(copied_path, orig_path)
