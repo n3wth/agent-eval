@@ -7,9 +7,10 @@ trend is the product, so every scorecard embeds its own comparison.
 
 Score mapping (documented, so the number means the same thing every run):
 rate -> score is linear, 4 x rate, rounded to one decimal. D1/D3 rates are
-pass^k. D2 durability is the NullMemory-adjusted rate; D2 discrimination is
-1 - over_application_rate. D5 warmed stays as the RAIR/RSR pair — it has no
-honest single-number form.
+pass^k. D2 durability uses the rubric's sessions-to-stick anchors
+(NullMemory-adjusted) when the memory run measured the curve, falling back
+to 4 x rate; D2 discrimination is 1 - over_application_rate. D5 warmed
+stays as the RAIR/RSR pair — it has no honest single-number form.
 """
 
 from __future__ import annotations
@@ -65,10 +66,20 @@ def assemble(base: str | Path = "runs", agent: str = "agent") -> dict:
     )
     latest_rel = rel_scored[-1] if rel_scored else None
 
+    d2_durability = None
+    if mem and mem.get("d2_reportable"):
+        # Prefer the rubric-anchored sessions-to-stick score from the curve;
+        # older records carry only the rate.
+        d2_durability = (
+            mem.get("durability_score")
+            if mem.get("durability_score") is not None
+            else _to4(mem["durability_rate"])
+        )
+
     scores = {
         "d1": {"cold": _to4(suite_rate("cold")), "warmed": _to4(suite_rate("warmed"))},
         "d2": {
-            "durability": _to4(mem["durability_rate"]) if mem and mem.get("d2_reportable") else None,
+            "durability": d2_durability,
             "discrimination": (
                 _to4(1 - mem["over_application_rate"]) if mem and mem.get("d2_reportable") else None
             ),
@@ -101,10 +112,16 @@ def assemble(base: str | Path = "runs", agent: str = "agent") -> dict:
     flags = {
         "cold_start_cliff": cliff is not None and cliff >= 1.5,
         "hoarder": bool(mem and mem.get("hoarder")),
+        # Sessions-to-stick never converging is the no-warming signature
+        # (docs/tenure.md); reversion is its weaker cousin.
         "no_warming": bool(
             mem
             and mem.get("d2_reportable")
-            and (mem.get("reversions", 0) >= 1 or (mem.get("durability_rate") or 0) <= 0.25)
+            and (
+                mem.get("not_converged", 0) >= 1
+                or mem.get("reversions", 0) >= 1
+                or (mem.get("durability_rate") or 0) <= 0.25
+            )
             and (scores["d1"]["warmed"] or 0) >= 3
         ),
         "cold_start_dishonesty": (
@@ -118,12 +135,39 @@ def assemble(base: str | Path = "runs", agent: str = "agent") -> dict:
     if mem and not mem.get("d2_reportable"):
         flags["d2_incomplete"] = mem.get("d2_note", "memory pair incomplete")
 
+    warmed_suite = suites.get("warmed")
+    consistency_gap = None
+    if (
+        warmed_suite
+        and warmed_suite.get("pass_at_1_rate") is not None
+        and warmed_suite.get("pass_k_rate") is not None
+    ):
+        consistency_gap = round(
+            warmed_suite["pass_at_1_rate"] - warmed_suite["pass_k_rate"], 2
+        )
+
+    trust_entries = journal.load_entries(base, "trust")
+    trust = None
+    if trust_entries:
+        latest_month = max(e["date"][:7] for e in trust_entries)
+        scores_in_month = [
+            float(e["score"]) for e in trust_entries if e["date"][:7] == latest_month
+        ]
+        trust = round(sum(scores_in_month) / len(scores_in_month), 2)
+
     record = {
         "kind": "scorecard",
         "agent": agent,
         "date": time.strftime("%Y-%m-%d"),
         "scores": scores,
         "cliff": cliff,
+        "consistency_gap": consistency_gap,
+        # Durability detail follows the pair rule: shown only when
+        # discrimination was scored too.
+        "sessions_to_stick": (
+            mem.get("sessions_to_stick") if mem and mem.get("d2_reportable") else None
+        ),
+        "trust": trust,
         "flags": flags,
         "reliance": rel,
         "sources": {
@@ -184,6 +228,9 @@ def render_markdown(record: dict) -> str:
         "## Headline",
         "",
         f"- **Cold-start cliff size:** {_fmt(record['cliff'])} (warmed avg − cold avg over D1/D3/D4)",
+        f"- **Consistency gap:** {_fmt(record.get('consistency_gap'))} (pass@1 − pass^k, warmed; what a single demo run overstates)",
+        f"- **Sessions-to-stick (median):** {_fmt(record.get('sessions_to_stick'))}",
+        f"- **Trust scale (latest month mean):** {_fmt(record.get('trust'))}",
     ]
     flags = record["flags"]
     lines.append("")
@@ -214,6 +261,54 @@ def render_markdown(record: dict) -> str:
             lines.append(f"- {cell}: {move['from']} → {move['to']} {arrow}")
         if delta["regressions"]:
             lines.append(f"- **Regressions:** {', '.join(delta['regressions'])}")
+    lines.append("")
+    return "\n".join(lines)
+
+
+COMPARE_CELLS = [
+    ("D1 cold", "d1", "cold"),
+    ("D1 warmed", "d1", "warmed"),
+    ("D2 durability", "d2", "durability"),
+    ("D2 discrimination", "d2", "discrimination"),
+    ("D3 cold", "d3", "cold"),
+    ("D3 warmed", "d3", "warmed"),
+    ("D4 cold", "d4", "cold"),
+    ("D4 warmed", "d4", "warmed"),
+    ("D5 cold (honesty)", "d5", "cold"),
+    ("D5 RAIR", "d5", "rair"),
+    ("D5 RSR", "d5", "rsr"),
+]
+
+
+def render_comparison(a: dict, b: dict) -> str:
+    """Two scorecards side by side: agents, or the same agent across runs.
+
+    Cross-agent data is the point (CONTRIBUTING.md); this is the table you'd
+    publish. Cells the runs didn't score stay gaps in both columns.
+    """
+    name_a = f"{a.get('agent', 'A')} ({a.get('date', '?')})"
+    name_b = f"{b.get('agent', 'B')} ({b.get('date', '?')})"
+    lines = [
+        f"# Comparison — {name_a} vs {name_b}",
+        "",
+        f"| Cell | {name_a} | {name_b} | Δ |",
+        "|------|---:|---:|---:|",
+    ]
+    for label, dim, cell in COMPARE_CELLS:
+        va = a.get("scores", {}).get(dim, {}).get(cell)
+        vb = b.get("scores", {}).get(dim, {}).get(cell)
+        delta = round(vb - va, 2) if va is not None and vb is not None else None
+        lines.append(f"| {label} | {_fmt(va)} | {_fmt(vb)} | {_fmt(delta)} |")
+    for label, key in [("Cold-start cliff", "cliff"), ("Consistency gap", "consistency_gap")]:
+        va, vb = a.get(key), b.get(key)
+        delta = round(vb - va, 2) if va is not None and vb is not None else None
+        lines.append(f"| {label} | {_fmt(va)} | {_fmt(vb)} | {_fmt(delta)} |")
+    flags_a = {k for k, v in a.get("flags", {}).items() if v is True}
+    flags_b = {k for k, v in b.get("flags", {}).items() if v is True}
+    lines.append("")
+    lines.append(f"- Flags only on {name_a}: {', '.join(sorted(flags_a - flags_b)) or 'none'}")
+    lines.append(f"- Flags only on {name_b}: {', '.join(sorted(flags_b - flags_a)) or 'none'}")
+    lines.append(f"- Shared flags: {', '.join(sorted(flags_a & flags_b)) or 'none'}")
     lines.append("")
     return "\n".join(lines)
 

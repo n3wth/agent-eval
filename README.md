@@ -69,7 +69,7 @@ Four instruments, escalating in cost and signal. The deliverable is a dated scor
 
 **Cadence:** baseline cold and warmed → use daily for 1–2 weeks → re-score weekly. → [scorecards/template.md](scorecards/template.md)
 
-Each instrument is one command (`agent-eval run suite|memory|texture`, `agent-eval journal`, `agent-eval scorecard`); the harness enforces the method's guard rails — pass^k as the headline, the memory pair or nothing, the NullMemory control, the RAIR/RSR 2x2 — in code, pinned by tests. → [docs/harness.md](docs/harness.md)
+Each instrument is one command (`agent-eval run suite|memory|texture`, `agent-eval journal`, `agent-eval scorecard`); the harness enforces the method's guard rails — pass^k as the headline, the memory pair or nothing, the NullMemory control, the RAIR/RSR 2x2, sessions-to-stick scored on the rubric's own anchors — in code, pinned by tests. Batch runs record full transcripts and resolve later through `agent-eval score`; `agent-eval compare` puts two agents' scorecards side by side. → [docs/harness.md](docs/harness.md)
 
 ## Repo map
 

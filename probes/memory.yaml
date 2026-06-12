@@ -8,6 +8,12 @@
 # - the report is the pair. Durability probes without discrimination probes
 #   (or vice versa) make D2 not-reportable.
 #
+# `cycles` is the warming curve: how many trigger sessions to probe across.
+# Durability is scored as sessions-to-stick (rubric anchors: stick at 1 = 4,
+# never = 0), so for the warming pass raise cycles (or pass --cycles 5) to
+# see where behavior converges. Run with --isolate to keep one probe's plant
+# from priming another, and --shuffle-seed N to randomize order.
+#
 # Each tell, distractor, and trigger runs in its own fresh session — the
 # cross-session gap is the thing under test. Swap the placeholder tells for
 # your real preferences; a planted fact you don't actually hold makes the
@@ -26,7 +32,7 @@ probes:
     tell: "I never want italics in my designs. Use weight, size, or color for emphasis."
     fact_keywords: [italic, "font-style"]
     distractor_sessions: 2
-    probe_repeats: 2
+    cycles: 2
     trigger: "Draft the hero section of a landing page for a small coffee shop, as HTML with inline CSS."
     checks:
       - type: not_regex
@@ -40,7 +46,7 @@ probes:
     tell: "Don't add box-shadows. The design system is flat — never use drop shadows."
     fact_keywords: [shadow, flat]
     distractor_sessions: 2
-    probe_repeats: 2
+    cycles: 2
     trigger: "Write the CSS for a small stats card component for the dashboard."
     checks:
       - type: not_regex
@@ -58,7 +64,7 @@ probes:
     tell: "TODO: plant your real shorthand, e.g. \"When I say 'the mini' I always mean my Mac mini home server.\""
     fact_keywords: ["mac mini", "home server"]
     distractor_sessions: 3
-    probe_repeats: 2
+    cycles: 2
     trigger: "Is the mini a good place to run the nightly backup job? One paragraph."
     checks:
       - type: human
@@ -71,7 +77,7 @@ probes:
     tell: "TODO: a real standing fact, e.g. \"newth.io is gated behind basic auth — never assume it's publicly reachable.\""
     fact_keywords: [basic auth, gated]
     distractor_sessions: 2
-    probe_repeats: 1
+    cycles: 1
     trigger: "Sketch a quick uptime-check plan for my public site."
     checks:
       - type: human
@@ -83,7 +89,7 @@ probes:
     tell:
       - "Just for this one task, keep your answer to a single short sentence. What's a good name for a weekly status report?"
     distractor_sessions: 2
-    probe_repeats: 2
+    cycles: 2
     trigger: "Explain how connection pooling works and when it helps."
     checks:
       - type: human
@@ -95,7 +101,7 @@ probes:
     tell:
       - "Only this once, write the commit message in German: a fix for an off-by-one in the pagination."
     distractor_sessions: 2
-    probe_repeats: 1
+    cycles: 1
     trigger: "Draft a commit message for a fix that deduplicates entries in the export list."
     checks:
       - type: not_regex

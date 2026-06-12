@@ -124,6 +124,79 @@ def test_delta_chain_survives_custom_runs_dir(tmp_path):
     assert second["delta"]["moves"]["d1.warmed"] == {"from": 2.0, "to": 4.0}
 
 
+def test_durability_prefers_rubric_anchored_curve_score(tmp_path):
+    base = tmp_path / "runs"
+    storage.save_run(
+        {
+            "kind": "memory",
+            "durability_rate": 1.0,
+            "durability_score": 3.0,  # stick at 2: rubric says 3, not 4
+            "over_application_rate": 0.0,
+            "d2_reportable": True,
+            "hoarder": False,
+            "not_converged": 0,
+            "reversions": 0,
+            "sessions_to_stick": 2,
+        },
+        "memory",
+        base,
+    )
+    record = assemble(base)
+    assert record["scores"]["d2"]["durability"] == 3.0
+    assert record["sessions_to_stick"] == 2
+
+
+def test_no_warming_flag_from_non_convergence(tmp_path):
+    base = tmp_path / "runs"
+    seed_suite(base, "warmed", 1.0)  # decent D1
+    storage.save_run(
+        {
+            "kind": "memory",
+            "durability_rate": 0.5,
+            "durability_score": 2.0,
+            "over_application_rate": 0.0,
+            "d2_reportable": True,
+            "hoarder": False,
+            "not_converged": 1,  # sessions-to-stick never converged
+            "reversions": 0,
+        },
+        "memory",
+        base,
+    )
+    record = assemble(base)
+    assert record["flags"]["no_warming"] is True
+
+
+def test_consistency_gap_and_trust_on_headline(tmp_path):
+    base = tmp_path / "runs"
+    storage.save_run(
+        {"kind": "suite", "tenure": "warmed", "pass_k_rate": 0.5, "pass_at_1_rate": 1.0},
+        "suite",
+        base,
+    )
+    journal.append_entry({"type": "trust", "score": 5.0}, base)
+    journal.append_entry({"type": "trust", "score": 6.0}, base)
+    record = assemble(base)
+    assert record["consistency_gap"] == 0.5
+    assert record["trust"] == 5.5
+    md = render_markdown(record)
+    assert "Consistency gap" in md
+
+
+def test_render_comparison_side_by_side(tmp_path):
+    from agent_eval.scorecard import render_comparison
+
+    base_a = tmp_path / "a"
+    base_b = tmp_path / "b"
+    seed_suite(base_a, "warmed", 0.5)
+    seed_suite(base_b, "warmed", 1.0)
+    a = assemble(base_a, agent="openclaw")
+    b = assemble(base_b, agent="hermes")
+    md = render_comparison(a, b)
+    assert "openclaw" in md and "hermes" in md
+    assert "| D1 warmed | 2.0 | 4.0 | 2.0 |" in md
+
+
 def test_markdown_renders_with_gaps(tmp_path):
     base = tmp_path / "runs"
     seed_suite(base, "warmed", 1.0)

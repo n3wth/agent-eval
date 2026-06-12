@@ -9,6 +9,9 @@ them:
 - ``hoarder`` — stores everything, including the ephemeral. High durability
   plus high over-application; the pair must catch it.
 - ``amnesiac`` — stores nothing. The no-warming agent.
+- ``slow`` — stores like ``good`` but only applies memory from the
+  ``warmup_sessions``-th session on (default 3). The warming-curve agent:
+  sessions-to-stick lands somewhere past 1.
 
 Replies echo the prompt; remembered instructions are appended in an
 ``[applying: ...]`` block so checks can read what the toy memory did.
@@ -40,6 +43,14 @@ class MockMemoryControl(MemoryControl):
     def restore(self, token: str) -> None:
         self.adapter.memory = list(self._stash[token])
 
+    def checkpoint(self) -> str:
+        token = f"c{len(self._stash)}"
+        self._stash[token] = list(self.adapter.memory)
+        return token
+
+    def rollback(self, token: str) -> None:
+        self.adapter.memory = list(self._stash[token])
+
 
 class MockSession(Session):
     def __init__(self, adapter: "MockAdapter", session_id: str | None = None):
@@ -67,7 +78,10 @@ class MockSession(Session):
                 break
         if text is None:
             text = f"ok: {message[:80]}"
-        if a.memory:
+        warmed_up = behavior != "slow" or a._session_count >= a.config.get(
+            "warmup_sessions", 3
+        )
+        if a.memory and warmed_up:
             text += "\n[applying: " + " | ".join(a.memory) + "]"
         return Reply(text=text)
 
@@ -79,9 +93,11 @@ class MockAdapter(Adapter):
         super().__init__(config)
         self.memory: list[str] = []
         self._rule_counts: dict[str, int] = {}
+        self._session_count = 0
         self._memory_control = MockMemoryControl(self)
 
     def start_session(self, session_id: str | None = None) -> Session:
+        self._session_count += 1
         return MockSession(self, session_id)
 
     @property

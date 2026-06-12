@@ -34,22 +34,32 @@ A new agent that doesn't fit either generic shape needs one subclass of `Adapter
 ```sh
 agent-eval run suite   --config configs/openclaw.yaml --tenure warmed   # D1, D3
 agent-eval run suite   --config configs/openclaw.yaml --tenure cold     # the wiped pass
-agent-eval run memory  --config configs/openclaw.yaml                   # D2, the pair
+agent-eval run memory  --config configs/openclaw.yaml --cycles 5        # D2: the warming curve
 agent-eval run texture --config configs/openclaw.yaml --tenure warmed   # D4 (+ cold honesty for D5)
+agent-eval score                                                        # resolve a batch run's pending checks
 agent-eval journal add                                                  # daily, 1-2 weeks
 agent-eval journal reliance --relied --right --capability refactor      # one accept/override event
+agent-eval journal trust --score 5                                      # the weekly trust-scale rating
 agent-eval reliance                                                     # weekly RAIR / RSR
 agent-eval scorecard --agent openclaw                                   # the dated deliverable
+agent-eval compare runs/a.json runs/b.json                              # two scorecards side by side
 ```
 
 Cadence as in [proposal.md](proposal.md) §4: baseline cold and warmed, use daily for one to two weeks logging journal and reliance events, re-score weekly. Each run writes a dated JSON record under `runs/` (gitignored — run data is private); the scorecard assembles the latest of each and computes its own delta against the previous scorecard.
 
+**Run unattended, score later.** A `--batch` run records full transcripts and marks human checks pending; `agent-eval score` replays them — transcript, pre-written question, y/n — and re-aggregates through the same code the runner used. The question was fixed before the agent ran, the verdict comes after: pre-registration with none of the ceremony. Re-scored runs feed the scorecard like any other.
+
+**The warming curve.** Durability is scored the way the rubric defines it: sessions-to-stick, the first probe session where conforming behavior appears and holds (stick at 1 scores 4, at 2 scores 3, 3–4 scores 2, ≥5 scores 1, never 0 — the no-warming signature, which raises the scorecard flag). Each memory probe probes across `cycles` fresh sessions; the default 2 detects stick-at-1 and reversion, the warming pass (`--cycles 5`) sees where behavior actually converges. Perturbation probes reuse the machinery to report sessions-to-re-adapt.
+
+**Cross-agent comparison.** `agent-eval compare` takes two scorecard JSONs — two agents, or the same agent across runs — and renders the grid side by side with deltas and each one's failure-mode flags. Cross-agent data is the point; this is the table you'd publish.
+
 ## What the code enforces
 
-- **pass^k is the headline.** The suite runner computes both rates and prints pass@1 only as contrast. Each scenario runs k times (default 3) in fresh sessions.
-- **The memory pair, or nothing.** A memory run with only durability probes (or only discrimination) reports `d2_reportable: false`, and the scorecard shows the gap with a warning instead of a durability number. Durability alone rewards hoarding; the refusal is the point.
+- **pass^k is the headline.** The suite runner computes both rates and prints pass@1 only as contrast. Each scenario runs k times (default 3) in fresh sessions. The scorecard reports the pass@1 − pass^k spread as the consistency gap: what a single demo run overstates.
+- **The memory pair, or nothing.** A memory run with only durability probes (or only discrimination) reports `d2_reportable: false`, and the scorecard shows the gap with a warning instead of a durability number — sessions-to-stick included. Durability alone rewards hoarding; the refusal is the point.
 - **NullMemory subtraction.** Every durability probe re-runs with continuity broken (memory wiped between sessions, not just once — a single wipe would let the tell session write fresh memory and pass anyway). A probe the control also passes is base-model priors and counts zero toward durability.
 - **The restatement lint.** A trigger containing a `fact_keyword` is rejected at load: a probe that restates the planted fact measures compliance, not memory.
+- **Probe isolation and order randomization.** `--isolate` checkpoints memory before the run and rolls back between probes (copy-based, nothing deleted), so probe A's plant can't prime probe B — and the store is left as it was found. `--shuffle-seed N` randomizes probe order to rule out recency; the seed lands in the record so the run stays reproducible.
 - **D5 is the 2x2.** RAIR (of agent-right events, the fraction you relied) and RSR (of agent-wrong events, the fraction you overrode). An empty quadrant reads as unknown, never as zero, and the drift check flags RAIR rising while RSR is flat or falling — the pattern a delegation-volume metric would have rewarded.
 - **Pending is not pass.** Human-scored checks left unanswered in `--batch` mode mark the run pending; pending runs are excluded from rates, not rounded up.
 - **Judges are labeled.** `llm` checks carry `scored_by: llm` in every record, so the self-preference and verbosity biases from [tenure.md](tenure.md) stay visible. Keep the soft dimensions human-scored or dual-scored.
