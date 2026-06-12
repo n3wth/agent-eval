@@ -1,0 +1,20 @@
+# Hermes (the worked example), driven over HTTP against a hermes-webui
+# instance. Fill in the url and payload shape for your install; the preset
+# defaults (agent_eval/adapters/hermes.py) are shown commented out.
+#
+# Hermes is reachable on two surfaces (messaging bridge, ACP coding surface).
+# For the cross-surface probe (P4) make a second config pointing at the other
+# surface and pass it as --second-config:
+#
+#   agent-eval run memory --config configs/hermes.yaml --second-config configs/hermes-acp.yaml
+name: hermes
+runs_dir: runs
+
+agent:
+  adapter: hermes
+  url: "http://localhost:8080/api/chat" # your hermes-webui endpoint
+  # payload: { session_id: "{session_id}", message: "{message}" }
+  # response_field: reply
+  # headers: { Authorization: "Bearer ${HERMES_TOKEN}" }
+  # memory_paths:             # wherever Hermes keeps continuity on the mini
+  #   - "~/hermes/memory"

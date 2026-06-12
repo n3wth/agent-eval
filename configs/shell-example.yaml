@@ -1,0 +1,17 @@
+# "And others": any agent with a CLI fits behind the generic shell adapter
+# (any HTTP endpoint fits behind `adapter: http` — see configs/hermes.yaml
+# for the shape). This example drives Claude Code in print mode with
+# per-session continuity.
+name: claude-code
+runs_dir: runs
+
+agent:
+  adapter: shell
+  command: ["claude", "-p", "{message}"]
+  response: text
+  timeout: 600
+  # Without a session flag every send is its own conversation, so the memory
+  # probes measure the agent's persistent store (memory files, CLAUDE.md)
+  # directly — usually what you want for a CLI agent. If your CLI supports
+  # resumable sessions, add its flag with the {session_id} placeholder.
+  # memory_paths: ["~/.claude/projects"]   # only if you want cold-start passes

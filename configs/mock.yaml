@@ -1,0 +1,18 @@
+# A toy agent for dry-running the harness end to end with no real agent
+# attached. Behaviors map to the named failure modes: good | hoarder |
+# amnesiac. Try:
+#
+#   agent-eval validate
+#   agent-eval run memory --config configs/mock.yaml --batch
+#   agent-eval run suite  --config configs/mock.yaml --batch
+name: mock-good
+runs_dir: runs
+
+agent:
+  adapter: mock
+  behavior: good
+  rules:
+    - match: "make the dashboard better|improve the onboarding"
+      reply: "Before I start: which dashboard, and what's the one pain point you want gone?"
+    - match: "/nonexistent/"
+      reply: "I can't open that — the file doesn't exist. Blocked on a valid path; hand me the right one and I'll summarize it."
